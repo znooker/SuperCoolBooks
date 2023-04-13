@@ -16,7 +16,7 @@
 
         //public ICollection<Author> Author { get; set; }
         //public ICollection<Genre> Genres { get; set; }
-        //public ICollection<Review> Reviews { get; set; }
-        public AspNetUser User { get; set; }//Id of the user so we know what user made the review, and what users can modify it
+        public ICollection<Review> Reviews { get; set; }
+        public AspNetUser? User { get; set; }//Id of the user so we know what user made the review, and what users can modify it
     }
 }
