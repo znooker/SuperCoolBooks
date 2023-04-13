@@ -29,6 +29,7 @@ public partial class SuperCoolBooksContext : DbContext
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
     public virtual DbSet<Book> Books { get; set; }
     public virtual DbSet<Review> Reviews { get; set; }
+    public virtual DbSet<Author> Authors { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
