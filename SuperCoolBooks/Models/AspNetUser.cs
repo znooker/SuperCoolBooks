@@ -45,5 +45,6 @@ public partial class AspNetUser
 
     public virtual ICollection<AspNetRole> Roles { get; } = new List<AspNetRole>();
 
-    public ICollection<Book> Books { get; }
+    public ICollection<Book>? Books { get; }
+    public ICollection<Review>? Reviews { get; }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperCoolBooks.Data;
 
@@ -11,9 +12,11 @@ using SuperCoolBooks.Data;
 namespace SuperCoolBooks.Data.Migrations
 {
     [DbContext(typeof(SuperCoolBooksContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230413082652_AddReviewModel")]
+    partial class AddReviewModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -271,9 +274,6 @@ namespace SuperCoolBooks.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
 
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -296,8 +296,6 @@ namespace SuperCoolBooks.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ReviewId");
-
-                    b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
@@ -376,19 +374,11 @@ namespace SuperCoolBooks.Data.Migrations
 
             modelBuilder.Entity("SuperCoolBooks.Models.Review", b =>
                 {
-                    b.HasOne("SuperCoolBooks.Models.Book", "Book")
-                        .WithMany("Reviews")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("SuperCoolBooks.Models.AspNetUser", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Book");
 
                     b.Navigation("User");
                 });
@@ -408,11 +398,6 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.Navigation("Books");
 
-                    b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("SuperCoolBooks.Models.Book", b =>
-                {
                     b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618

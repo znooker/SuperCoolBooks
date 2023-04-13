@@ -2,8 +2,10 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
 using SuperCoolBooks.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SuperCoolBooks.Data;
 
@@ -25,6 +27,8 @@ public partial class SuperCoolBooksContext : DbContext
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+    public virtual DbSet<Book> Books { get; set; }
+    public virtual DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -105,7 +109,15 @@ public partial class SuperCoolBooksContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
         });
 
-        OnModelCreatingPartial(modelBuilder);
+       
+    
+        modelBuilder.Entity<Book>()
+            .HasMany(c => c.Reviews)
+            .WithOne(e => e.Book)
+            .OnDelete(DeleteBehavior.NoAction);
+    
+
+    OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
