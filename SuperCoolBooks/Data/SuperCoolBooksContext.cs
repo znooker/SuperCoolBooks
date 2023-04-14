@@ -123,8 +123,16 @@ public partial class SuperCoolBooksContext : DbContext
 
         });
 
-       
-    
+        modelBuilder.Entity<Author>(entity =>
+        {
+            entity.HasKey(e => e.AuthorId);
+            entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.BirthDate).IsRequired();
+            entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
+            entity.Property(e => e.ImagePath).IsRequired();
+        });
+
         modelBuilder.Entity<Book>()
             .HasMany(c => c.Reviews)
             .WithOne(e => e.Book)
