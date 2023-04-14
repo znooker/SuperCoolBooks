@@ -17,6 +17,17 @@
                 <label asp-for="Book.UserId" class="control-label"></label>
                 <select asp-for="Book.UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div>
+
+            <div class="form-group">
+                <label asp-for="Author.AuthorId" class="control-label"></label>
+                <select asp-for="Author.AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Genre.GenreId" class="control-label"></label>
+                <select asp-for="Genre.GenreId" class="form-control" asp-items="ViewBag.GenerId"></select>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Book.Title" class="control-label"></label>
                 <input asp-for="Book.Title" class="form-control" />

@@ -21,13 +21,13 @@ namespace SuperCoolBooks.Pages.Books
 
         public IActionResult OnGet()
         {
-        ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return Page();
         }
 
         [BindProperty]
         public Book Book { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
