@@ -38,7 +38,10 @@ namespace SuperCoolBooks.Pages.Admin.Genre
             Genre = genre;
             return Page();
         }
-
+        /// <summary>
+        /// Needs fixing, can't update title correctly
+        /// </summary>
+        /// <returns></returns>
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
@@ -48,30 +51,48 @@ namespace SuperCoolBooks.Pages.Admin.Genre
                 return Page();
             }
 
-            _context.Attach(Genre).State = EntityState.Modified;
+            // check if a genre with the same title already exists in the database
+            var existingGenre = await _context.Genres.FirstOrDefaultAsync(g => g.Title == Genre.Title);
 
-            try
+            //check if the genre beeing edited has the same id as the one found in the database
+            if (existingGenre != null && Genre.GenreId == existingGenre.GenreId)
             {
+
+                //update the existing genre record
+                existingGenre.Title = Genre.Title;
+                existingGenre.Description = Genre.Description;
+
+                // save changes to the database
                 await _context.SaveChangesAsync();
+
+                // redirect to the genre list page
+                return RedirectToPage("./Index");
             }
-            catch (DbUpdateConcurrencyException)
+
+            //if no matching title found, Create that genre
+            else if (existingGenre is null)
             {
-                if (!GenreExists(Genre.GenreId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                // Create a new genre record
+                var newGenre = new Models.Genre {Title = Genre.Title, Description = Genre.Description };
+
+                // Add the new genre to the context
+                _context.Add(newGenre);
+
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                // Redirect to the genre list page
+                return RedirectToPage("./Index");
+            }
+            else
+            {
+                ModelState.AddModelError("Genre.Title", "A genre with that title already exists!");
+                return Page();
             }
 
-            return RedirectToPage("./Index");
         }
 
-        private bool GenreExists(int id)
-        {
-          return (_context.Genres?.Any(e => e.GenreId == id)).GetValueOrDefault();
-        }
+
+
     }
 }
