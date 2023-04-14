@@ -28,7 +28,7 @@ namespace SuperCoolBooks.Pages.Admin.Genre
                 return NotFound();
             }
 
-            var genre = await _context.Genres.FirstOrDefaultAsync(m => m.GenreID == id);
+            var genre = await _context.Genres.FirstOrDefaultAsync(m => m.GenreId == id);
             if (genre == null)
             {
                 return NotFound();

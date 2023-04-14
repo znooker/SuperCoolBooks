@@ -113,7 +113,7 @@ public partial class SuperCoolBooksContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.GenreID);
+            entity.HasKey(e => e.GenreId);
             entity.HasIndex(e => e.Title, "IX_Genre_Titel");
             entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
 
