@@ -30,7 +30,7 @@ namespace SuperCoolBooks.Pages.Admin.Genre
                 return NotFound();
             }
 
-            var genre =  await _context.Genres.FirstOrDefaultAsync(m => m.GenreID == id);
+            var genre =  await _context.Genres.FirstOrDefaultAsync(m => m.GenreId == id);
             if (genre == null)
             {
                 return NotFound();
@@ -56,7 +56,7 @@ namespace SuperCoolBooks.Pages.Admin.Genre
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GenreExists(Genre.GenreID))
+                if (!GenreExists(Genre.GenreId))
                 {
                     return NotFound();
                 }
@@ -71,7 +71,7 @@ namespace SuperCoolBooks.Pages.Admin.Genre
 
         private bool GenreExists(int id)
         {
-          return (_context.Genres?.Any(e => e.GenreID == id)).GetValueOrDefault();
+          return (_context.Genres?.Any(e => e.GenreId == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -33,8 +34,10 @@ namespace SuperCoolBooks.Pages.Admin.Genre
         {
           if (!ModelState.IsValid || _context.Genres == null || Genre == null)
             {
+                
                 return Page();
             }
+          
 
             _context.Genres.Add(Genre);
             await _context.SaveChangesAsync();

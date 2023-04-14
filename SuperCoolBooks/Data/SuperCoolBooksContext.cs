@@ -111,6 +111,18 @@ public partial class SuperCoolBooksContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
         });
 
+        modelBuilder.Entity<Genre>(entity =>
+        {
+            entity.HasKey(e => e.GenreID);
+            entity.HasIndex(e => e.Title, "IX_Genre_Titel");
+            entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
+
+            entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
+
+        });
+
        
     
         modelBuilder.Entity<Book>()
