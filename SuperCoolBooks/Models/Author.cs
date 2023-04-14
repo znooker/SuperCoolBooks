@@ -10,6 +10,6 @@
         public string ImagePath { get; set; }
 
         //Navigation Props
-        public ICollection<Book> Books { get; set; }
+        public ICollection<Book>? Books { get; set; }
     }
 }
