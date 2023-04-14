@@ -1,20 +1,26 @@
 ﻿@page
 @model SuperCoolBooks.Pages.Admin.IndexModel
 @{
+    ViewData["Title"] = "Admin Home";
 }
 
 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
     <ul class="navbar-nav flex-grow-1">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-page="./Book/index">Book</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="./Book/">Book</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-page="./Author/index">Author</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="~/Admin/Author/Index">Author</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-page="./Genre/index">Genre</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="./Admin/Genre/">Genre</a>
         </li>
-       
+
     </ul>
-  
+
 </div>
+
+</div>
+
+
+<partial name="_AdminNav" />
