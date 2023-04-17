@@ -30,14 +30,8 @@ namespace SuperCoolBooks.Pages.Admin.Author
                 return NotFound();
             }
 
-            //Check that the uploaded file is a image(png, jpg or jpeg)
-            var allowedFileExtensions = new[] { ".png", ".jpg", ".jpeg" };
-            var fileExtension = Path.GetExtension(Author.ImagePath); //Gets the file extension of the file
-            if (!allowedFileExtensions.Contains(fileExtension)) //Checks if the file does not contain a correct file extension
-            {
-                ModelState.AddModelError("Author.ImagePath", "File needs to be of type .png, .jpg or .jpeg");
-                return Page();
-            }
+
+            
 
             var author =  await _context.Authors.FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
@@ -73,6 +67,17 @@ namespace SuperCoolBooks.Pages.Admin.Author
                 {
                     throw;
                 }
+            }
+
+            //THIS CODE NEEDS TO BE FIXED
+
+            //Check that the uploaded file is a image(png, jpg or jpeg)
+            var allowedFileExtensions = new[] { ".png", ".jpg", ".jpeg" };
+            var fileExtension = Path.GetExtension(Author.ImagePath); //Gets the file extension of the file
+            if (!allowedFileExtensions.Contains(fileExtension)) //Checks if the file does not contain a correct file extension
+            {
+                ModelState.AddModelError("Author.ImagePath", "File needs to be of type .png, .jpg or .jpeg");
+                return Page();
             }
 
             return RedirectToPage("./Index");
