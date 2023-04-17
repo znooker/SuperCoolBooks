@@ -13,13 +13,14 @@ namespace SuperCoolBooks.Pages.Admin.Book
 {
     public class CreateModel : PageModel
     {
-        private readonly SuperCoolBooks.Data.SuperCoolBooksContext _context;
+        private readonly SuperCoolBooksContext _context;
 
-        public CreateModel(SuperCoolBooks.Data.SuperCoolBooksContext context)
+        public CreateModel(SuperCoolBooksContext context)
         {
             _context = context;
         }
 
+<<<<<<< Updated upstream
         public IActionResult Index()
         {
             var books = _context.Books.ToList();
@@ -56,12 +57,35 @@ namespace SuperCoolBooks.Pages.Admin.Book
 
             //Book.Author = new Models.Author();
 
+=======
+        [BindProperty]
+        public Models.Book Book { get; set; }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+>>>>>>> Stashed changes
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
+<<<<<<< Updated upstream
             _context.Attach(Book).State = EntityState.Added;
+=======
+            // Add the book to the database
+            _context.Books.Add(Book);
+>>>>>>> Stashed changes
+            await _context.SaveChangesAsync();
+
+            // Add the genres and authors to the book
+            foreach (var genre in Book.Genres)
+            {
+                if (_context.Entry(Book).Collection(b => b.Genres).Query().FirstOrDefault(g => g.GenreId == genre.GenreId) == null)
+                {
+                    _context.Add(genre);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
