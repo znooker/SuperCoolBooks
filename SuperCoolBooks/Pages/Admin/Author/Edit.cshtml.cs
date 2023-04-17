@@ -31,8 +31,6 @@ namespace SuperCoolBooks.Pages.Admin.Author
             }
 
 
-            
-
             var author =  await _context.Authors.FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {
@@ -68,9 +66,6 @@ namespace SuperCoolBooks.Pages.Admin.Author
                     throw;
                 }
             }
-
-            //THIS CODE NEEDS TO BE FIXED
-
             //Check that the uploaded file is a image(png, jpg or jpeg)
             var allowedFileExtensions = new[] { ".png", ".jpg", ".jpeg" };
             var fileExtension = Path.GetExtension(Author.ImagePath); //Gets the file extension of the file
