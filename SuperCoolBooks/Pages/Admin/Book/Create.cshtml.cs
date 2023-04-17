@@ -20,36 +20,48 @@ namespace SuperCoolBooks.Pages.Admin.Book
             _context = context;
         }
 
+        public IActionResult Index()
+        {
+            var books = _context.Books.ToList();
+
+            return View(books);
+        }
+
         public async Task<IActionResult> OnGet()
         {
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["AuthorId"] = new SelectList(_context.Authors, "AuthorId", "AuthorId");
             ViewData["GenerId"] = new SelectList(_context.Genres, "GenreId", "GenreId");
-                 MyBook = await _context.Books
-                .Include(a=> a.Author)
-                .Include(e => e.Genres)
-                .AsNoTracking()
-                .ToListAsync();
+
             return Page();
         }
-        public List<Models.Book> MyBook { get; set; }
         [BindProperty]
-        public Models.Book Book { get; set; } = default!;
+        //public Models.Book Book { get; set; } = default!;
+        public List<Models.Book> Book { get; set; } = new List<Models.Book>();
         [BindProperty]
-        public Models.Author Author { get; set; } = default!;
+        public Models.Genre Genre { get; set; }
         [BindProperty]
-        public Models.Genre Genre { get; set; } = default!;
-
-
+        public Models.Author Author { get; set; }
+        
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Books == null || Book == null)
+
+            Genre = await _context.Genres.FindAsync(Genre.GenreId);
+            Author = await _context.Authors.FindAsync(Author.AuthorId);
+            List <Models.Book> Book = await _context.Books.Include(b => b.Author)
+            .Include(c => c.Genres)
+            .ToListAsync();
+             //.FirstOrDefaultAsync();
+
+            //Book.Author = new Models.Author();
+
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Books.Add(Book);
+            _context.Attach(Book).State = EntityState.Added;
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

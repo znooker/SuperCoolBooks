@@ -12,10 +12,17 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+            @{
+                var bookType = typeof(Models.Book);
+                var properties = bookType.GetProperties();
+            }
+            @foreach (var property in properties)
+            {
+                <p>@property.Name</p>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Book.UserId" class="control-label"></label>
-                <select asp-for="Book.UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                    <label asp-for=@Html.DisplayFor(modelItem => item.UserId) class="control-label"></label>
+                    <select asp-for=@Html.DisplayFor(modelItem => item.UserId) class="form-control" asp-items="ViewBag.UserId"></select>
             </div>
 
             <div class="form-group">
@@ -29,40 +36,41 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Book.Title" class="control-label"></label>
-                <input asp-for="Book.Title" class="form-control" />
-                <span asp-validation-for="Book.Title" class="text-danger"></span>
+                    <label asp-for="@Html.DisplayFor(modelItem => item.Title)" class="control-label"></label>
+                    <input asp-for="@Html.DisplayFor(modelItem => item.Title)" class="form-control" />
+                    <span asp-validation-for="@item.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Book.Description" class="control-label"></label>
-                <input asp-for="Book.Description" class="form-control" />
-                <span asp-validation-for="Book.Description" class="text-danger"></span>
+                    <label asp-for="@item.Description" class="control-label"></label>
+                    <input asp-for="@item.Description" class="form-control" />
+                    <span asp-validation-for="@item.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Book.ISBN" class="control-label"></label>
-                <input asp-for="Book.ISBN" class="form-control" />
-                <span asp-validation-for="Book.ISBN" class="text-danger"></span>
+                    <label asp-for="@item.ISBN" class="control-label"></label>
+                    <input asp-for="@item.ISBN" class="form-control" />
+                    <span asp-validation-for="@item.ISBN" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Book.ImagePath" class="control-label"></label>
-                <input asp-for="Book.ImagePath" class="form-control" />
-                <span asp-validation-for="Book.ImagePath" class="text-danger"></span>
+                    <label asp-for="@item.ImagePath" class="control-label"></label>
+                    <input asp-for="@item.ImagePath" class="form-control" />
+                    <span asp-validation-for="@item.ImagePath" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Book.isDeleted" /> @Html.DisplayNameFor(model => model.Book.isDeleted)
+                        <input class="form-check-input" asp-for="@item.isDeleted" /> @item.isDeleted
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Book.Created" class="control-label"></label>
-                <input asp-for="Book.Created" class="form-control" />
-                <span asp-validation-for="Book.Created" class="text-danger"></span>
-            </div>
+                    <label asp-for="@item.Created" class="control-label"></label>
+                    <input asp-for="@item.Created" class="form-control" />
+                    <span asp-validation-for="@item.Created" class="text-danger"></span>
+                </div>
             <div class="form-group">
-                <label asp-for="Book.ReleaseDate" class="control-label"></label>
-                <input asp-for="Book.ReleaseDate" class="form-control" />
-                <span asp-validation-for="Book.ReleaseDate" class="text-danger"></span>
-            </div>
+                    <label asp-for="@item.ReleaseDate" class="control-label"></label>
+                    <input asp-for="@item.ReleaseDate" class="form-control" />
+                    <span asp-validation-for="@item.ReleaseDate" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
