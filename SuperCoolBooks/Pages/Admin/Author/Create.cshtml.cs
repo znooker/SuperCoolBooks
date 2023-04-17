@@ -36,6 +36,17 @@ namespace SuperCoolBooks.Pages.Admin.Author
             {
                 return Page();
             }
+
+            //Check that the uploaded file is a image(png, jpg or jpeg)
+            var allowedFileExtensions = new[] { ".png", ".jpg", ".jpeg" };
+            var fileExtension = Path.GetExtension(Author.ImagePath); //Gets the file extension of the file
+            if (!allowedFileExtensions.Contains(fileExtension)) //Checks if the file does not contain a correct file extension
+            {
+                ModelState.AddModelError("Author.ImagePath", "File needs to be of type .png, .jpg or .jpeg");
+                return Page();
+            }
+
+
           //Check if an author with the same Name & Birthdate 
           if (await _context.Authors.AnyAsync(a=>a.FirstName == Author.FirstName && a.LastName == Author.LastName && a.BirthDate == Author.BirthDate))
             {
