@@ -135,7 +135,29 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.ImagePath).IsRequired(false); //Had to change to false so validation worked correctly
         });
 
-        modelBuilder.Entity<Book>(entity =>
+        modelBuilder.Entity<Review>(entity =>
+        {
+            entity.HasKey(e => e.ReviewId);
+            entity.Property(e => e.UserId);
+            entity.Property(e => e.BookId);
+            entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.ReviewText).HasMaxLength(1000).IsRequired();
+            entity.Property(e => e.Rating).IsRequired();
+            entity.Property(e => e.IsDeleted).HasColumnType("bit").HasDefaultValue("false").IsRequired();
+            entity.Property(e => e.Created).HasColumnType("datetime2").HasDefaultValueSql("GETDATE()");
+
+            //entity.HasOne(d => d.Reviews).WithMany(b => b.Books).UsingEntity(
+            //l => l.HasOne(typeof(Genre)).WithMany().OnDelete(DeleteBehavior.NoAction),
+            //r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
+            //);
+
+        //.HasMany(e => e.Posts)
+        //.WithOne(e => e.Blog)
+        //.OnDelete(DeleteBehavior.Restrict);
+
+        });
+
+            modelBuilder.Entity<Book>(entity =>
         {
             entity.HasKey(e => e.BookId);
             entity.Property(e => e.UserId).IsRequired();
@@ -144,8 +166,8 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.ISBN).HasMaxLength(20).IsRequired();
             entity.Property(e => e.ImagePath).IsRequired();
             entity.Property(e => e.isDeleted).HasColumnType("bit").HasDefaultValue("false").IsRequired();
-            entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
-            entity.Property(e => e.ReleaseDate).HasColumnType("datetime").IsRequired();
+            entity.Property(e => e.Created).HasColumnType("datetime2").HasDefaultValueSql("GETDATE()");
+            entity.Property(e => e.ReleaseDate).HasColumnType("datetime2").IsRequired();
 
             entity.HasMany(d => d.Author).WithMany(b => b.Books).UsingEntity(
                 l => l.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.NoAction),
@@ -157,6 +179,11 @@ public partial class SuperCoolBooksContext : DbContext
                 r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
                 );
             
+            
+            entity.HasMany(e => e.Reviews)
+            .WithOne(e => e.Book)
+            .OnDelete(DeleteBehavior.Restrict);
+
         });
 
 
