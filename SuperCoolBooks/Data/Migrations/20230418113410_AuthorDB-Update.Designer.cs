@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperCoolBooks.Data;
 
@@ -11,9 +12,11 @@ using SuperCoolBooks.Data;
 namespace SuperCoolBooks.Data.Migrations
 {
     [DbContext(typeof(SuperCoolBooksContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230418113410_AuthorDB-Update")]
+    partial class AuthorDBUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -350,6 +353,9 @@ namespace SuperCoolBooks.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("GenreId");
+
+                    b.HasAlternateKey("Title")
+                        .HasName("Genre_Uniqe_Title_Constraint");
 
                     b.HasIndex(new[] { "Title" }, "IX_Genre_Titel");
 

@@ -130,7 +130,7 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
             entity.Property(e => e.BirthDate).IsRequired();
             entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
-            entity.Property(e => e.ImagePath).IsRequired();
+            entity.Property(e => e.ImagePath).IsRequired(false); //Had to change to false so validation worked correctly
         });
 
         modelBuilder.Entity<Book>()
