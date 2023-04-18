@@ -137,9 +137,9 @@ public partial class SuperCoolBooksContext : DbContext
             .HasMany(c => c.Reviews)
             .WithOne(e => e.Book)
             .OnDelete(DeleteBehavior.NoAction);
-    
 
-    OnModelCreatingPartial(modelBuilder);
+
+        OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
