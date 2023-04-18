@@ -1,10 +1,60 @@
 ﻿@page
 @model IndexModel
+@inject SuperCoolBooks.Data.SuperCoolBooksContext _context
+
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+
+
+@*Container for the top selected / random book. A larger field and more information.*@
+ <div class="container">
+    <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
+
+        <div class="col-md-4"  >        
+  
+            <img src="@Model.BookR.ImagePath" style="height:300px;width:300px" />
+      </div>
+          <div class="col-md-8" >
+
+        <p>
+
+        <h1>Slumpad bok från tabellen Books</h1>
+
+        @if (Model.BookR != null)
+                {
+        <p>Titel: @Model.BookR.Title</p>
+        <p>Författare:</p>
+        }
+        else
+        {
+        <p>Inga resultat hittades.</p>
+        }
+        </p>
+      </div> 
+    </div>
+  </div>
+
+
+
+@*Container for the other books. A responsive grid.*@
+  <div class="container">
+    <div class="row">
+        @foreach (var item in Model.Book){
+            <div class="col-md-4" style="background-color: #f2f2f2; padding: 3%;">
+           
+        <img src="@item.ImagePath" style="height:250px;width:250px" />
+                
+        <p>Titel: 
+                @Html.DisplayFor(modelItem => item.Title)
+        </p>
+        <p>Författare:
+           @Html.DisplayFor(modelItem => item.Author)
+        </p>
+      </div>
+        }
+    </div>
+  </div>
+

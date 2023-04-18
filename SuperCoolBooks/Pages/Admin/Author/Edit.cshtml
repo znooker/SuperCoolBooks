@@ -40,8 +40,10 @@
                 @if (!String.IsNullOrEmpty(Model.Author.ImagePath))
                 {
                     <div class="d-flex flex-column">
+
                         <span class="text-muted">Current Image: @Model.Author.ImagePath </span>
                         <img src="~/images/author-images/@Model.Author.ImagePath" style="width:75px;height:75px;" alt="@Model.Author.FirstName @Model.Author.LastName"/>
+
                    </div>
                 }
                 <span asp-validation-for="Image" class="text-danger"></span>
