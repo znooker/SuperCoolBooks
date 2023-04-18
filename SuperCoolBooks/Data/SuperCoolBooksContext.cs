@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.Extensions.Hosting;
 using SuperCoolBooks.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -133,10 +135,30 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.ImagePath).IsRequired(false); //Had to change to false so validation worked correctly
         });
 
-        modelBuilder.Entity<Book>()
-            .HasMany(c => c.Reviews)
-            .WithOne(e => e.Book)
-            .OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Book>(entity =>
+        {
+            entity.HasKey(e => e.BookId);
+            entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(1000).IsRequired();
+            entity.Property(e => e.ISBN).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.ImagePath).IsRequired();
+            entity.Property(e => e.isDeleted).HasColumnType("bool").HasDefaultValue("false").IsRequired();
+            entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
+            entity.Property(e => e.ReleaseDate).HasColumnType("datetime").IsRequired();
+
+            entity.HasMany(d => d.Author).WithMany(b => b.Books).UsingEntity(
+                l => l.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.Cascade),
+                r => r.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.Cascade)
+                );
+        });
+
+    
+        modelBuilder.Entity<Post>()
+            .HasMany(e => e.Tags)
+            .WithMany(e => e.Posts)
+            .UsingEntity(
+                l => l.HasOne(typeof(Tag)).WithMany().OnDelete(DeleteBehavior.Restrict),
+                r => r.HasOne(typeof(Post)).WithMany().OnDelete(DeleteBehavior.Restrict));
     
 
     OnModelCreatingPartial(modelBuilder);
