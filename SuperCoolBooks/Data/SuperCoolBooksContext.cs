@@ -117,7 +117,7 @@ public partial class SuperCoolBooksContext : DbContext
         {
             entity.HasKey(e => e.GenreId);
             entity.HasIndex(e => e.Title, "IX_Genre_Titel");
-            //entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
+            entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
 
             entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(1000);
@@ -138,28 +138,27 @@ public partial class SuperCoolBooksContext : DbContext
         modelBuilder.Entity<Book>(entity =>
         {
             entity.HasKey(e => e.BookId);
+            entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(1000).IsRequired();
             entity.Property(e => e.ISBN).HasMaxLength(20).IsRequired();
             entity.Property(e => e.ImagePath).IsRequired();
-            entity.Property(e => e.isDeleted).HasColumnType("bool").HasDefaultValue("false").IsRequired();
+            entity.Property(e => e.isDeleted).HasColumnType("bit").HasDefaultValue("false").IsRequired();
             entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
             entity.Property(e => e.ReleaseDate).HasColumnType("datetime").IsRequired();
 
             entity.HasMany(d => d.Author).WithMany(b => b.Books).UsingEntity(
-                l => l.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.Cascade),
-                r => r.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.Cascade)
+                l => l.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.NoAction),
+                r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
                 );
+
+            entity.HasMany(d => d.Genres).WithMany(b => b.Books).UsingEntity(
+                l => l.HasOne(typeof(Genre)).WithMany().OnDelete(DeleteBehavior.NoAction),
+                r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
+                );
+            
         });
 
-    
-        modelBuilder.Entity<Post>()
-            .HasMany(e => e.Tags)
-            .WithMany(e => e.Posts)
-            .UsingEntity(
-                l => l.HasOne(typeof(Tag)).WithMany().OnDelete(DeleteBehavior.Restrict),
-                r => r.HasOne(typeof(Post)).WithMany().OnDelete(DeleteBehavior.Restrict));
-    
 
     OnModelCreatingPartial(modelBuilder);
     }

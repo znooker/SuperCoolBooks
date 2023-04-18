@@ -351,6 +351,9 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasKey("GenreId");
 
+                    b.HasAlternateKey("Title")
+                        .HasName("Genre_Uniqe_Title_Constraint");
+
                     b.HasIndex(new[] { "Title" }, "IX_Genre_Titel");
 
                     b.ToTable("Genres", (string)null);
