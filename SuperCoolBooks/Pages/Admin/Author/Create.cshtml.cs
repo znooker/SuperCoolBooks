@@ -14,10 +14,12 @@ namespace SuperCoolBooks.Pages.Admin.Author
     public class CreateModel : PageModel
     {
         private readonly SuperCoolBooks.Data.SuperCoolBooksContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CreateModel(SuperCoolBooks.Data.SuperCoolBooksContext context)
+        public CreateModel(SuperCoolBooks.Data.SuperCoolBooksContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult OnGet()
@@ -27,12 +29,21 @@ namespace SuperCoolBooks.Pages.Admin.Author
 
         [BindProperty]
         public Models.Author Author { get; set; } = default!;
+
+        [BindProperty]
+        public IFormFile Image { get; set; }
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Authors == null || Author == null)
+
+            if (Image != null)
+            {
+                Author.ImagePath = ProcessUploadedFile();
+            }
+
+            if (!ModelState.IsValid || _context.Authors == null || Author == null)
             {
                 return Page();
             }
@@ -47,7 +58,7 @@ namespace SuperCoolBooks.Pages.Admin.Author
             }
 
 
-          //Check if an author with the same Name & Birthdate 
+          //Check if an author with the same Name & Birthdate already exists
           if (await _context.Authors.AnyAsync(a=>a.FirstName == Author.FirstName && a.LastName == Author.LastName && a.BirthDate == Author.BirthDate))
             {
                 ModelState.AddModelError("Author.FirstName", "An Author with the same Name & Birthdate already exists");
@@ -58,6 +69,28 @@ namespace SuperCoolBooks.Pages.Admin.Author
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
+        }
+        private string ProcessUploadedFile()
+        {
+            //Check if there is a file to upload
+            if (Image != null)
+            {
+                //Path for the uploads folder
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/author-images");
+                //File name of the uploaded file
+                string fileName = Path.GetFileName(Image.FileName);
+                //combines the uploads folder and filename to create a path to the file
+                string filePath = Path.Combine(uploadsFolder, fileName);
+                //open a file stream to the destination file and copy the uploaded file to it
+                using (var filestream = new FileStream(filePath, FileMode.Create))
+                {
+                    Image.CopyTo(filestream);
+                }
+                //return the filename which will be used for Author.ImagePath
+                return fileName;
+            }
+            //if no file to upload
+            return null;
         }
     }
 }
