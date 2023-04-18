@@ -37,10 +37,17 @@
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" type="file" class="form-control" />
+                @if (!String.IsNullOrEmpty(Model.Author.ImagePath))
+                {
+                    <div class="d-flex flex-column">
+                        <span class="text-muted">Current Image path: @Model.Author.ImagePath </span>
+                        <img src="~/images/author-images/@Model.Author.ImagePath" style="width:75px;height:75px;"/>
+                   </div>
+                }
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary mt-1" />
             </div>
         </form>
     </div>
