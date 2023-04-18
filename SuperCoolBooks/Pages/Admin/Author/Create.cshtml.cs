@@ -37,6 +37,12 @@ namespace SuperCoolBooks.Pages.Admin.Author
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            long maxFileSizeBytes = 10 * 1024 * 1024; // Max file size (10MB)
+            if (Image.Length > maxFileSizeBytes)
+            {
+                ModelState.AddModelError("Image", $"The uploaded file exceeds the maximum file size of {maxFileSizeBytes / 1024 / 1024} MB.");
+                return Page();
+            }
 
             if (Image != null)
             {
