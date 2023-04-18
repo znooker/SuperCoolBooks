@@ -31,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Author.Created" class="control-label"></label>
-                <input asp-for="Author.Created" class="form-control" />
+                <input asp-for="Author.Created" class="form-control" readonly />
                 <span asp-validation-for="Author.Created" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,8 +40,10 @@
                 @if (!String.IsNullOrEmpty(Model.Author.ImagePath))
                 {
                     <div class="d-flex flex-column">
-                        <span class="text-muted">Current Image path: @Model.Author.ImagePath </span>
-                        <img src="~/images/author-images/@Model.Author.ImagePath" style="width:75px;height:75px;"/>
+
+                        <span class="text-muted">Current Image: @Model.Author.ImagePath </span>
+                        <img src="~/images/author-images/@Model.Author.ImagePath" style="width:75px;height:75px;" alt="@Model.Author.FirstName @Model.Author.LastName"/>
+
                    </div>
                 }
                 <span asp-validation-for="Image" class="text-danger"></span>

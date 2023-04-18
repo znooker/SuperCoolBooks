@@ -48,7 +48,7 @@
             </td>
             <td>
                 @*@Html.DisplayFor(modelItem => item.ImagePath)*@
-                <img src="~/images/author-images/@item.ImagePath" style="height:50px;width:50px"/>
+                <img src="~/images/author-images/@item.ImagePath" style="height:50px;width:50px" alt="@item.FirstName @item.LastName"/>
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.AuthorId">Edit</a> |
