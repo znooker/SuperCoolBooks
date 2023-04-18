@@ -115,7 +115,7 @@ public partial class SuperCoolBooksContext : DbContext
         {
             entity.HasKey(e => e.GenreId);
             entity.HasIndex(e => e.Title, "IX_Genre_Titel");
-            entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
+            //entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
 
             entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(1000);
