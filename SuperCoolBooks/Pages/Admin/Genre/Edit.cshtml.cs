@@ -52,12 +52,11 @@ namespace SuperCoolBooks.Pages.Admin.Genre
             }
 
             // check if a genre with the same title already exists in the database
-            var existingGenre = await _context.Genres.FirstOrDefaultAsync(g => g.Title == Genre.Title);
+            var existingGenre = await _context.Genres.FirstOrDefaultAsync(g => g.GenreId == Genre.GenreId);
 
             //check if the genre beeing edited has the same id as the one found in the database
             if (existingGenre != null && Genre.GenreId == existingGenre.GenreId)
             {
-
                 //update the existing genre record
                 existingGenre.Title = Genre.Title;
                 existingGenre.Description = Genre.Description;

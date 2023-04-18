@@ -16,7 +16,7 @@
                 var bookType = typeof(Models.Book);
                 var properties = bookType.GetProperties();
             }
-            @foreach (var property in properties)
+           @* @foreach (var property in properties)
             {
                 <p>@property.Name</p>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -73,7 +73,7 @@
             }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            </div>*@
         </form>
     </div>
 </div>
