@@ -24,37 +24,37 @@ namespace SuperCoolBooks.Pages.Admin.Book
         {
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["AuthorId"] = new SelectList(_context.Authors, "AuthorId", "AuthorId");
-            ViewData["GenerId"] = new SelectList(_context.Genres, "GenreId", "GenreId");
+            ViewData["GenreId"] = new SelectList(_context.Genres, "GenreId", "GenreId");
 
             return Page();
         }
         [BindProperty]
         public Models.Book Book { get; set; }
-        [BindProperty]
-        public List <Models.Genre> Genre { get; set; }
-        [BindProperty]
+        public List<Models.Genre> Genre { get; set; }
         public List <Models.Author> Author { get; set; }
-       
+
         public async Task<IActionResult> OnPostAsync()
         {
-                //Genre = await _context.Genres.FindAsync(Genre.GenreId);
-                //Author = await _context.Authors.FindAsync(Author.AuthorId);
-                List<Models.Book> Book = await _context.Books.Include(b => b.Author)
+
+
+            //Book.Author = new List<Models.Author>();
+            //Genre = await _context.Genres.FindAsync(Genre.GenreId);
+            //Author = await _context.Authors.FindAsync(Author.AuthorId);
+                Book = await _context.Books.Include(b => b.Author)
                 .Include(c => c.Genres)
-                .ToListAsync();
-                //.FirstOrDefaultAsync();
-                //.FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();
+            //.ToListAsync();
+            //.FirstOrDefaultAsync();
 
-                //Book.Author = new Models.Author();
+            //Book.Author = new Models.Author();
 
-                if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            if (!ModelState.IsValid)
+        {
+            return Page();
+        }
 
             _context.Attach(Book).State = EntityState.Added;
             //_context.Books.Add(Book);
-            await _context.SaveChangesAsync();
             /*
             foreach (var genre in Book.Genres)
             {
