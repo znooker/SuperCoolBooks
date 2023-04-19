@@ -1,4 +1,6 @@
-﻿namespace SuperCoolBooks.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SuperCoolBooks.Models
 {
     public class Review
     {
@@ -18,8 +20,9 @@
 
         public string ReviewText { get; set; }
 
-        public virtual Book Book { get; set; }
 
-        public virtual AspNetUser User { get; set; }
+        //Had to make these nullable or the validation check would always put these as invalid
+        public virtual Book? Book { get; set; }
+        public virtual AspNetUser? User { get; set; }
     }
 }
