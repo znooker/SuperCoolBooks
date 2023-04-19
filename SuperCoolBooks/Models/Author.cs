@@ -12,7 +12,7 @@
 
         public DateTime Created { get; set; }
 
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
 
         public virtual ICollection<AuthorBook> AuthorBooks { get; } = new List<AuthorBook>();
     }

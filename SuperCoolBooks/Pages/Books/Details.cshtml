@@ -59,6 +59,13 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Book.User.Id)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Book.BookId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Book.BookId)
+        </dd>
+
     </dl>
 </div>
 <div>
@@ -66,4 +73,54 @@
     <a asp-page="./Index">Back to List</a>
 </div>
 
-<partial name="_ReviewTextBox" />
+@*Code for Leaving a review along with javascript for the character counter, for the moment the userId is hardcoded to be = 1*@
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Review.BookId" />
+            <div class="form-group">
+                <label asp-for="Review.Title" class="control-label"></label>
+                <input asp-for="Review.Title" class="form-control" />
+                <span asp-validation-for="Review.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Review.ReviewText" class="control-label"></label>
+                <textarea asp-for="Review.ReviewText" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Review.ReviewText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Review.Rating" class="control-label"></label>
+                <input asp-for="Review.Rating" class="form-control" type="number" min="1" max="5" step="1" />
+                <span asp-validation-for="Review.Rating" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="Review.BookId" value=""/>
+                @*Make it so UserID is equal to the logged in user*@
+                <input type="hidden" asp-for="Review.UserId" value="1"/>
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+  <script>
+      const textarea = document.getElementById("reviewTextArea");
+      const charCount = document.getElementById("charCount");
+      const maxChars = 500;
+
+      // Display initial "characters remaining" indicator
+      const remainingChars = maxChars - textarea.value.length;
+      charCount.textContent = `${remainingChars} characters remaining`;
+
+      // Attach event listener to update indicator on input
+      textarea.addEventListener("input", function() {
+        const remainingChars = maxChars - textarea.value.length;
+        charCount.textContent = `${remainingChars} characters remaining`;
+      });
+  </script>
