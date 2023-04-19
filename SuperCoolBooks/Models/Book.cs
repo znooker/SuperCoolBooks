@@ -14,9 +14,9 @@
 
         //Navigation Props
 
-        public ICollection<Author> Author { get; set; }
-        public ICollection<Genre> Genres { get; set; }
-        public ICollection<Review>? Reviews { get; set; } = new List<Review>();
-        public AspNetUser? User { get; set; }//Id of the user so we know what user made the review, and what users can modify it
+        public virtual ICollection<Author> Authors { get; } = new List<Author>();
+        public virtual ICollection<Genre> GenresGenres { get; } = new List<Genre>();
+        public virtual ICollection<Review> Reviews { get; } = new List<Review>();
+        public virtual AspNetUser? User { get; set; }//Id of the user so we know what user made the review, and what users can modify it
     }
 }

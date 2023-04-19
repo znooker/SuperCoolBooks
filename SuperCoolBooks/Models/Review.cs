@@ -12,7 +12,7 @@
 
         // Relations with other tables below
         public int BookId { get; set; }
-        public Book Book { get; set; }//The book the review is attached to
-        public AspNetUser? User { get; set; }//Id of the user so we know what user made the review, and what users can modify it
+        public virtual Book Book { get; set; }
+        public virtual AspNetUser User { get; set; }
     }
 }
