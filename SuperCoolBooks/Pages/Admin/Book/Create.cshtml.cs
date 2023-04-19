@@ -39,8 +39,8 @@ namespace SuperCoolBooks.Pages.Admin.Book
         {
                 //Genre = await _context.Genres.FindAsync(Genre.GenreId);
                 //Author = await _context.Authors.FindAsync(Author.AuthorId);
-                List<Models.Book> Book = await _context.Books.Include(b => b.Authors)
-                .Include(c => c.GenresGenres)
+                List<Models.Book> Book = await _context.Books.Include(b => b.AuthorBooks)
+                .Include(c => c.BookGenres)
                 .ToListAsync();
                 //.FirstOrDefaultAsync();
                 //.FirstOrDefaultAsync();

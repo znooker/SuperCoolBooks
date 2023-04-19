@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperCoolBooks.Data;
 
@@ -11,9 +12,11 @@ using SuperCoolBooks.Data;
 namespace SuperCoolBooks.Data.Migrations
 {
     [DbContext(typeof(SuperCoolBooksContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230419100120_Lekstuga")]
+    partial class Lekstuga
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +47,7 @@ namespace SuperCoolBooks.Data.Migrations
                         .IsUnique()
                         .HasFilter("([NormalizedName] IS NOT NULL)");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("AspNetRoles");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetRoleClaim", b =>
@@ -69,7 +72,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "RoleId" }, "IX_AspNetRoleClaims_RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("AspNetRoleClaims");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetUser", b =>
@@ -131,7 +134,7 @@ namespace SuperCoolBooks.Data.Migrations
                         .IsUnique()
                         .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetUserClaim", b =>
@@ -156,7 +159,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_AspNetUserClaims_UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("AspNetUserClaims");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetUserLogin", b =>
@@ -180,7 +183,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_AspNetUserLogins_UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("AspNetUserLogins");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetUserRole", b =>
@@ -195,7 +198,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("AspNetUserRoles");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetUserToken", b =>
@@ -216,7 +219,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("AspNetUserTokens");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.Author", b =>
@@ -251,7 +254,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasKey("AuthorId");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AuthorBook", b =>
@@ -318,7 +321,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_Books_UserId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.BookGenre", b =>
@@ -363,7 +366,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "Title" }, "IX_Genre_Titel");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.Review", b =>
@@ -412,7 +415,7 @@ namespace SuperCoolBooks.Data.Migrations
 
                     b.HasIndex(new[] { "UserId" }, "IX_Reviews_UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("SuperCoolBooks.Models.AspNetRoleClaim", b =>

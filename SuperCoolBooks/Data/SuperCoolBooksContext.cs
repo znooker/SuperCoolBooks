@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.Hosting;
@@ -28,15 +29,21 @@ public partial class SuperCoolBooksContext : DbContext
 
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
 
+    public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-
-    public virtual DbSet<Book> Books { get; set; }
-
-    public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<Author> Authors { get; set; }
 
+    public virtual DbSet<AuthorBook> AuthorBooks { get; set; }
+
+    public virtual DbSet<Book> Books { get; set; }
+
+    public virtual DbSet<BookGenre> BookGenres { get; set; }
+
     public virtual DbSet<Genre> Genres { get; set; }
+
+    public virtual DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -71,18 +78,6 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
-
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AspNetUserRole",
-                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId");
-                        j.ToTable("AspNetUserRoles");
-                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
-                    });
         });
 
         modelBuilder.Entity<AspNetUserClaim>(entity =>
@@ -107,6 +102,17 @@ public partial class SuperCoolBooksContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
         });
 
+        modelBuilder.Entity<AspNetUserRole>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.RoleId });
+
+            entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetUserRoles).HasForeignKey(d => d.RoleId);
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserRoles).HasForeignKey(d => d.UserId);
+        });
+
         modelBuilder.Entity<AspNetUserToken>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
@@ -115,19 +121,6 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(128);
 
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-        });
-
-        modelBuilder.Entity<Genre>(entity =>
-        {
-            entity.HasIndex(e => e.Title, "IX_Genre_Titel");
-
-            entity.Property(e => e.Created)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.Description).HasMaxLength(1000);
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(255);
         });
 
         modelBuilder.Entity<Author>(entity =>
@@ -141,22 +134,76 @@ public partial class SuperCoolBooksContext : DbContext
             entity.Property(e => e.LastName)
                 .IsRequired()
                 .HasMaxLength(100);
+        });
 
-            entity.HasMany(d => d.BooksBooks).WithMany(p => p.Authors)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AuthorBook",
-                    r => r.HasOne<Book>().WithMany()
-                        .HasForeignKey("BooksBookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    l => l.HasOne<Author>().WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    j =>
-                    {
-                        j.HasKey("AuthorId", "BooksBookId");
-                        j.ToTable("AuthorBook");
-                        j.HasIndex(new[] { "BooksBookId" }, "IX_AuthorBook_BooksBookId");
-                    });
+        modelBuilder.Entity<AuthorBook>(entity =>
+        {
+            entity.HasKey(e => new { e.AuthorId, e.BooksBookId });
+
+            entity.ToTable("AuthorBook");
+
+            entity.HasIndex(e => e.BooksBookId, "IX_AuthorBook_BooksBookId");
+
+            entity.HasOne(d => d.Author).WithMany(p => p.AuthorBooks)
+                .HasForeignKey(d => d.AuthorId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.BooksBook).WithMany(p => p.AuthorBooks)
+                .HasForeignKey(d => d.BooksBookId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<Book>(entity =>
+        {
+            entity.HasIndex(e => e.UserId, "IX_Books_UserId");
+
+            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasMaxLength(1000);
+            entity.Property(e => e.ISBN)
+                .IsRequired()
+                .HasMaxLength(20);
+            entity.Property(e => e.ImagePath).IsRequired();
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.isDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Books).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<BookGenre>(entity =>
+        {
+            entity.HasKey(e => new { e.BooksBookId, e.GenresGenreId });
+
+            entity.ToTable("BookGenre");
+
+            entity.HasIndex(e => e.GenresGenreId, "IX_BookGenre_GenresGenreId");
+
+            entity.HasOne(d => d.BooksBook).WithMany(p => p.BookGenres)
+                .HasForeignKey(d => d.BooksBookId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.GenresGenre).WithMany(p => p.BookGenres)
+                .HasForeignKey(d => d.GenresGenreId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<Genre>(entity =>
+        {
+            entity.HasIndex(e => e.Title, "IX_Genre_Titel");
+
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255);
         });
 
         modelBuilder.Entity<Review>(entity =>
@@ -185,47 +232,7 @@ public partial class SuperCoolBooksContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Reviews).HasForeignKey(d => d.UserId);
         });
 
-            modelBuilder.Entity<Book>(entity =>
-        {
-            entity.HasIndex(e => e.UserId, "IX_Books_UserId");
-
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Description)
-                .IsRequired()
-                .HasMaxLength(1000);
-            entity.Property(e => e.ISBN)
-                .IsRequired()
-                .HasMaxLength(20);
-            entity.Property(e => e.ImagePath).IsRequired();
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.UserId).IsRequired();
-            entity.Property(e => e.isDeleted)
-                .IsRequired()
-                .HasDefaultValueSql("(CONVERT([bit],(0)))");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Books).HasForeignKey(d => d.UserId);
-
-            entity.HasMany(d => d.GenresGenres).WithMany(p => p.BooksBooks)
-                .UsingEntity<Dictionary<string, object>>(
-                    "BookGenre",
-                    r => r.HasOne<Genre>().WithMany()
-                        .HasForeignKey("GenresGenreId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    l => l.HasOne<Book>().WithMany()
-                        .HasForeignKey("BooksBookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull),
-                    j =>
-                    {
-                        j.HasKey("BooksBookId", "GenresGenreId");
-                        j.ToTable("BookGenre");
-                        j.HasIndex(new[] { "GenresGenreId" }, "IX_BookGenre_GenresGenreId");
-                    });
-        });
-
-
-    OnModelCreatingPartial(modelBuilder);
+        OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
