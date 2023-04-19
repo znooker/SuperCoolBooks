@@ -10,6 +10,6 @@
         public string? ImagePath { get; set; } //Needed to make it nullable otherwise validation didnt work
 
         //Navigation Props
-        public ICollection<Book>? Books { get; set; }
+        public virtual ICollection<Book> BooksBooks { get; } = new List<Book>();
     }
 }

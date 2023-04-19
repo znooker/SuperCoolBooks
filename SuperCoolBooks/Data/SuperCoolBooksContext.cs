@@ -29,9 +29,13 @@ public partial class SuperCoolBooksContext : DbContext
     public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+
     public virtual DbSet<Book> Books { get; set; }
+
     public virtual DbSet<Review> Reviews { get; set; }
+
     public virtual DbSet<Author> Authors { get; set; }
+
     public virtual DbSet<Genre> Genres { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -115,75 +119,109 @@ public partial class SuperCoolBooksContext : DbContext
 
         modelBuilder.Entity<Genre>(entity =>
         {
-            entity.HasKey(e => e.GenreId);
             entity.HasIndex(e => e.Title, "IX_Genre_Titel");
-            entity.HasAlternateKey(e => e.Title).HasName("Genre_Uniqe_Title_Constraint");
 
-            entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(1000);
-            entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
-
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255);
         });
 
         modelBuilder.Entity<Author>(entity =>
         {
-            entity.HasKey(e => e.AuthorId);
-            entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.BirthDate).IsRequired();
-            entity.Property(e => e.Created).HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
-            entity.Property(e => e.ImagePath).IsRequired(false); //Had to change to false so validation worked correctly
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FirstName)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.LastName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.HasMany(d => d.BooksBooks).WithMany(p => p.Authors)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AuthorBook",
+                    r => r.HasOne<Book>().WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    l => l.HasOne<Author>().WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    j =>
+                    {
+                        j.HasKey("AuthorId", "BooksBookId");
+                        j.ToTable("AuthorBook");
+                        j.HasIndex(new[] { "BooksBookId" }, "IX_AuthorBook_BooksBookId");
+                    });
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId);
-            entity.Property(e => e.UserId);
-            entity.Property(e => e.BookId);
-            entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
-            entity.Property(e => e.ReviewText).HasMaxLength(1000).IsRequired();
-            entity.Property(e => e.Rating).IsRequired();
-            entity.Property(e => e.IsDeleted).HasColumnType("bit").HasDefaultValue("false").IsRequired();
-            entity.Property(e => e.Created).HasColumnType("datetime2").HasDefaultValueSql("GETDATE()");
+            entity.HasIndex(e => e.BookId, "IX_Reviews_BookId");
 
-            //entity.HasOne(d => d.Reviews).WithMany(b => b.Books).UsingEntity(
-            //l => l.HasOne(typeof(Genre)).WithMany().OnDelete(DeleteBehavior.NoAction),
-            //r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
-            //);
+            entity.HasIndex(e => e.UserId, "IX_Reviews_UserId");
 
-        //.HasMany(e => e.Posts)
-        //.WithOne(e => e.Blog)
-        //.OnDelete(DeleteBehavior.Restrict);
+            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.IsDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("(CONVERT([bit],(0)))");
+            entity.Property(e => e.ReviewText)
+                .IsRequired()
+                .HasMaxLength(1000)
+                .HasDefaultValueSql("(N'')");
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.UserId).IsRequired();
 
+            entity.HasOne(d => d.Book).WithMany(p => p.Reviews)
+                .HasForeignKey(d => d.BookId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.User).WithMany(p => p.Reviews).HasForeignKey(d => d.UserId);
         });
 
             modelBuilder.Entity<Book>(entity =>
         {
-            entity.HasKey(e => e.BookId);
-            entity.Property(e => e.UserId).IsRequired();
-            entity.Property(e => e.Title).HasMaxLength(255).IsRequired();
-            entity.Property(e => e.Description).HasMaxLength(1000).IsRequired();
-            entity.Property(e => e.ISBN).HasMaxLength(20).IsRequired();
+            entity.HasIndex(e => e.UserId, "IX_Books_UserId");
+
+            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasMaxLength(1000);
+            entity.Property(e => e.ISBN)
+                .IsRequired()
+                .HasMaxLength(20);
             entity.Property(e => e.ImagePath).IsRequired();
-            entity.Property(e => e.isDeleted).HasColumnType("bit").HasDefaultValue("false").IsRequired();
-            entity.Property(e => e.Created).HasColumnType("datetime2").HasDefaultValueSql("GETDATE()");
-            entity.Property(e => e.ReleaseDate).HasColumnType("datetime2").IsRequired();
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.isDeleted)
+                .IsRequired()
+                .HasDefaultValueSql("(CONVERT([bit],(0)))");
 
-            entity.HasMany(d => d.Author).WithMany(b => b.Books).UsingEntity(
-                l => l.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.NoAction),
-                r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
-                );
+            entity.HasOne(d => d.User).WithMany(p => p.Books).HasForeignKey(d => d.UserId);
 
-            entity.HasMany(d => d.Genres).WithMany(b => b.Books).UsingEntity(
-                l => l.HasOne(typeof(Genre)).WithMany().OnDelete(DeleteBehavior.NoAction),
-                r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.NoAction)
-                );
-            
-            
-            entity.HasMany(e => e.Reviews)
-            .WithOne(e => e.Book)
-            .OnDelete(DeleteBehavior.Restrict);
-
+            entity.HasMany(d => d.GenresGenres).WithMany(p => p.BooksBooks)
+                .UsingEntity<Dictionary<string, object>>(
+                    "BookGenre",
+                    r => r.HasOne<Genre>().WithMany()
+                        .HasForeignKey("GenresGenreId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    l => l.HasOne<Book>().WithMany()
+                        .HasForeignKey("BooksBookId")
+                        .OnDelete(DeleteBehavior.ClientSetNull),
+                    j =>
+                    {
+                        j.HasKey("BooksBookId", "GenresGenreId");
+                        j.ToTable("BookGenre");
+                        j.HasIndex(new[] { "GenresGenreId" }, "IX_BookGenre_GenresGenreId");
+                    });
         });
 
 
