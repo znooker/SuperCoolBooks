@@ -39,5 +39,11 @@ namespace SuperCoolBooks.Pages.Books
             }
             return Page();
         }
+
+        //Code to be added under here
+        public async Task<IActionResult> OnPostAsync()
+        {
+            return RedirectToPage("./Index");
+        }
     }
 }
