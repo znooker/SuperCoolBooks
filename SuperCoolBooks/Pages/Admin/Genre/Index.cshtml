@@ -22,7 +22,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Genre[0].Created)
             </th>
-            <th></th>
+            <th>
+                Books in Genre
+            </th>
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -37,11 +42,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
+                <td>@item.BookGenres.Count()</td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.GenreId">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.GenreId">Details</a> |
                 <a asp-page="./Delete" asp-route-id="@item.GenreId">Delete</a>
             </td>
+            
         </tr>
 }
     </tbody>

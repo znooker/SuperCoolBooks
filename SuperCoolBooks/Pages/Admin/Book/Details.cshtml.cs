@@ -28,7 +28,7 @@ namespace SuperCoolBooks.Pages.Admin.Book
                 return NotFound();
             }
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.BookId == id);
+            var book = await _context.Books.Include(bg => bg.BookGenres).ThenInclude(g => g.GenresGenre).FirstOrDefaultAsync(m => m.BookId == id);
             if (book == null)
             {
                 return NotFound();

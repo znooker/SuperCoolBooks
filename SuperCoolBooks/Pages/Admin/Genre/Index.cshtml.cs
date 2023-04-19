@@ -23,9 +23,11 @@ namespace SuperCoolBooks.Pages.Admin.Genre
 
         public async Task OnGetAsync()
         {
+
+
             if (_context.Genres != null)
             {
-                Genre = await _context.Genres.ToListAsync();
+                Genre = await _context.Genres.Include(bg => bg.BookGenres).ThenInclude(b => b.BooksBook).ToListAsync(); ;
             }
         }
     }
