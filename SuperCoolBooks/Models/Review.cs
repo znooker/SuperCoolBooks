@@ -2,17 +2,24 @@
 {
     public class Review
     {
-        public int ReviewId { get; set; }//Id of the review
-        public string UserId { get; set; }
-        public string Title { get; set; }//Title of review Varchar255
-        public string ReviewText { get; set; }//Text content of the book Varchar 1000
-        public int Rating { get; set; }//User rating of the book
-        public bool IsDeleted { get; set; }//If the review is deleted or not.So admins can remove a review without deleting it
-        public DateTime Created { get; set; }//Date review was created
+        public int ReviewId { get; set; }
 
-        // Relations with other tables below
+        public string UserId { get; set; }
+
+        public string Title { get; set; }
+
+        public int Rating { get; set; }
+
+        public bool? IsDeleted { get; set; }
+
+        public DateTime Created { get; set; }
+
         public int BookId { get; set; }
+
+        public string ReviewText { get; set; }
+
         public virtual Book Book { get; set; }
+
         public virtual AspNetUser User { get; set; }
     }
 }

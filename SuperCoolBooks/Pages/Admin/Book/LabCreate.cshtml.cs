@@ -27,13 +27,18 @@ namespace SuperCoolBooks.Pages.Admin.Book
         public List<SelectListItem> Authors { get; set; }
 
         [BindProperty]
+        public List<int> GenreId { get; set; }
+        [BindProperty]
+        public int AuthorId { get; set; }
+
+        [BindProperty]
         public List<SelectListItem> Genres { get; set; }
 
 
         public async Task<IActionResult> OnGet()
         {
         ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
-
+        
             Authors = await _context.Authors.Select(a => new SelectListItem
             {
                 Value = a.AuthorId.ToString(),
@@ -46,6 +51,7 @@ namespace SuperCoolBooks.Pages.Admin.Book
                 Text = $"{g.Title}"
             }).ToListAsync();
 
+
             return Page();
 
         }
@@ -53,15 +59,32 @@ namespace SuperCoolBooks.Pages.Admin.Book
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync(Models.Book book)
         {
-            
+            var test = Request.Form["testAId"];
 
           if (!ModelState.IsValid || _context.Books == null || Book == null)
             {
+                ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
                 return Page();
             }
+                   
 
             _context.Books.Add(Book);
+
             await _context.SaveChangesAsync();
+
+            //Add connection between book and authors in the JoinTable AuthorBook
+            AuthorBook authorBook = new AuthorBook() {AuthorId = AuthorId, BooksBookId = Book.BookId};
+            _context.AuthorBooks.Add(authorBook);
+
+            List<BookGenre> glist = new List<BookGenre>();
+            foreach (var id in GenreId)
+            {
+                glist.Add(new BookGenre { BooksBookId = Book.BookId, GenresGenreId = id });
+            }
+            
+            _context.BookGenres.AddRange(glist);
+            await _context.SaveChangesAsync();
+
 
             return RedirectToPage("./Index");
         }

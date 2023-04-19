@@ -41,10 +41,11 @@ public partial class AspNetUser
 
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; } = new List<AspNetUserLogin>();
 
+    public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; } = new List<AspNetUserRole>();
+
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; } = new List<AspNetUserToken>();
 
-    public virtual ICollection<AspNetRole> Roles { get; } = new List<AspNetRole>();
+    public virtual ICollection<Book> Books { get; } = new List<Book>();
 
-    public ICollection<Book>? Books { get; }
-    public ICollection<Review>? Reviews { get; }
+    public virtual ICollection<Review> Reviews { get; } = new List<Review>();
 }
