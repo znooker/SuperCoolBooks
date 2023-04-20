@@ -8,37 +8,40 @@
 
 
 
+@if(Model.BookR != null)
+{
+    @*Container for the top selected / random book. A larger field and more information.*@
+    <div class="container">
+        <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
 
-@*Container for the top selected / random book. A larger field and more information.*@
- <div class="container">
-    <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
+            <div class="col-md-4">
 
-        <div class="col-md-4"  >        
-  
-            <img src="@Model.BookR.ImagePath" style="height:300px;width:300px" />
-      </div>
-          <div class="col-md-8" >
+                <img src="@Model.BookR.ImagePath" style="height:300px;width:300px" />
+            </div>
+            <div class="col-md-8">
 
-        <p>
+                <p>
 
-        <h1>Slumpad bok från tabellen Books</h1>
+                    <h1>Slumpad bok från tabellen Books</h1>
 
-        @if (Model.BookR != null)
-                {
-        <p>Titel: @Model.BookR.Title</p>
-        <p>Författare:</p>
-        }
-        else
-        {
-        <p>Inga resultat hittades.</p>
-        }
-        </p>
-      </div> 
+                    @if (Model.BookR != null)
+                    {
+                    <p>Titel: @Model.BookR.Title</p>
+                    <p>Författare:</p>
+                    }
+                    else
+                    {
+                    <p>Inga resultat hittades.</p>
+                    }
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
+}
 
 
 
+@if (Model.Book != null){
 @*Container for the other books. A responsive grid.*@
   <div class="container">
     <div class="row">
@@ -57,4 +60,4 @@
         }
     </div>
   </div>
-
+}
