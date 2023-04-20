@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @inject SuperCoolBooks.Data.SuperCoolBooksContext _context
 
@@ -8,34 +8,34 @@
 
 
 
-@if(Model.BookR != null)
-{
-    @*Container for the top selected / random book. A larger field and more information.*@
-    <div class="container">
-        <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
 
-            <div class="col-md-4">
+@*Container for the top selected / random book. A larger field and more information.*@
+ <div class="container">
+    <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
 
-                <img src="@Model.BookR.ImagePath" style="height:300px;width:300px" />
-            </div>
-            <div class="col-md-8">
+        <div class="col-md-4"  >        
+  
+            <img src="@Model.RandomBook.ImagePath" style="height:300px;width:300px" />
+      </div>
+          <div class="col-md-8" >
 
-                <p>
+        <p>
 
-                    <h1>Slumpad bok från tabellen Books</h1>
+        <h1>Slumpad bok från tabellen Books</h1>
 
-                    @if (Model.BookR != null)
-                    {
-                    <p>Titel: @Model.BookR.Title</p>
-                    <p>Författare:</p>
-                    }
-                    else
-                    {
-                    <p>Inga resultat hittades.</p>
-                    }
-                </p>
-            </div>
-        </div>
+        @if (Model.RandomBook != null)
+                {
+        <p>Titel: @Model.RandomBook.Title</p>
+        <p>Författare: @Model.RandomBook</p>
+        }
+        else
+        {
+        <p>Inga resultat hittades.</p>
+        }
+        </p>
+      </div> 
+
+=======
     </div>
 }
 
@@ -45,7 +45,7 @@
 @*Container for the other books. A responsive grid.*@
   <div class="container">
     <div class="row">
-        @foreach (var item in Model.Book){
+        @foreach (var item in Model.Books){
             <div class="col-md-4" style="background-color: #f2f2f2; padding: 3%;">
            
         <img src="@item.ImagePath" style="height:250px;width:250px" />
@@ -54,10 +54,11 @@
                 @Html.DisplayFor(modelItem => item.Title)
         </p>
         <p>Författare:
-           @Html.DisplayFor(modelItem => item.AuthorBooks)
+                    @foreach (var authorbook in item.AuthorBooks)
+                @authorbook.Author.FirstName
+           
         </p>
       </div>
         }
     </div>
   </div>
-}
