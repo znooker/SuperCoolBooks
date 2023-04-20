@@ -9,6 +9,9 @@
          <h5>@review.Title</h5>
          <p style="font-size:1rem">Rating: @review.Rating</p>
          <p style="font-size:0.85rem">@review.ReviewText</p>
+         <form method="post" asp-page-handler="delete" asp-route-id="@review.ReviewId">
+             <button type="submit" class="btn btn-danger">Delete</button>
+         </form>
          </div>
      </div>
 
