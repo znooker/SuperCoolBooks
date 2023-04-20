@@ -16,7 +16,7 @@ namespace SuperCoolBooks.Pages
 
 
 
-        // med hjälp av books-copy
+    
         private readonly SuperCoolBooks.Data.SuperCoolBooksContext _context;
 
         public IndexModel(SuperCoolBooks.Data.SuperCoolBooksContext context)
@@ -38,12 +38,17 @@ namespace SuperCoolBooks.Pages
 
                 var random = new Random();
                 var count = _context.Books.Count();
+                if (count >= 1) { 
                 var index = random.Next(count);
                 RandomBook = _context.Books
                     .Include(e => e.AuthorBooks)
                     .ThenInclude(e => e.Author)
+                     .Include(e => e.BookGenres)
+                    .ThenInclude(e => e.GenresGenre)
                     .Skip(index)
                     .FirstOrDefault();
+                
+                }
             }
 
         }
