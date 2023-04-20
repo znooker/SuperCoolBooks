@@ -79,7 +79,7 @@ namespace SuperCoolBooks.Pages.Books
         }
 
 
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        public async Task<IActionResult> OnPostDeleteReviewAsync(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
 
