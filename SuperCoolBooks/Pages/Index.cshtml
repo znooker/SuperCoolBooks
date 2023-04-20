@@ -19,21 +19,37 @@
                 <img src="@Model.RandomBook.ImagePath" style="height:300px;width:300px" />
             </div>
             <div class="col-md-8">
-
-                <p>
-
-                    <h1>Slumpad bok från tabellen Books</h1>
-
+              
                     @if (Model.RandomBook != null)
                     {
+                    <!-- Print TITLE -->
                     <p>Titel: @Model.RandomBook.Title</p>
-                    <p>Författare:</p>
+                    <!-- Print AUTHOR -->
+                    <p>Author:
+                           @foreach (var item in Model.RandomBook.AuthorBooks)
+                           {
+                                @item.Author.FirstName
+
+                           }
+                      &#32; <!-- &#32 = This is a whitespace -->
+
+                           @foreach (var item in Model.RandomBook.AuthorBooks)
+                           {
+                                @item.Author.LastName
+                           }
+                    </p>
+                    <!-- Print GENRE -->
+                    <p>Genre: 
+                         @foreach (var item in Model.RandomBook.BookGenres)
+                         {
+                                @item.GenresGenre.Title
+                         }
+                    </p>
                     }
                     else
                     {
-                    <p>Inga resultat hittades.</p>
+                    <p>No results found.</p>
                     }
-                </p>
             </div>
         </div>
     </div>
@@ -49,13 +65,21 @@
             <div class="col-md-4" style="background-color: #f2f2f2; padding: 3%;">
            
         <img src="@item.ImagePath" style="height:250px;width:250px" />
-                
+        <!-- Print TITLE -->  
         <p>Titel: 
                 @Html.DisplayFor(modelItem => item.Title)
         </p>
-        <p>Författare:
-           @Html.DisplayFor(modelItem => item.AuthorBooks)
-        </p>
+        <!-- Print AUTHOR -->  
+        <p>Author:
+              @foreach (var item2 in item.AuthorBooks)
+              {
+                   @item2.Author.FirstName
+              }
+           &#32; <!-- &#32 = This is a whitespace -->
+             @foreach (var item2 in item.AuthorBooks)
+             {
+                   @item2.Author.LastName
+             }      
       </div>
         }
     </div>
