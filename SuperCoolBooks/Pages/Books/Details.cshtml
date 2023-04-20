@@ -77,7 +77,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form asp-page-handler="AsyncReview" method="post" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Review.BookId" />
             <div class="form-group">
@@ -106,9 +106,6 @@
         </form>
     </div>
 </div>
-
-
-
   <script>
       const textarea = document.getElementById("reviewTextArea");
       const charCount = document.getElementById("charCount");
@@ -124,3 +121,17 @@
         charCount.textContent = `${remainingChars} characters remaining`;
       });
   </script>
+
+      <div>
+          <h2>Reviews</h2>
+    @if (Model.Reviews == null || Model.Reviews.Count <=0)
+    {
+        <p>There are no reviews for this book yet</p>
+    }
+    else
+    {
+        @Html.Partial("_ExistingReviews", Model.Reviews)
+        @*<partial name="_ExistingReviews"/>*@
+    }
+
+      </div>

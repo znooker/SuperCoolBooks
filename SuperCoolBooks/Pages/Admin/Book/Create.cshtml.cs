@@ -11,60 +11,80 @@ using SuperCoolBooks.Models;
 
 namespace SuperCoolBooks.Pages.Admin.Book
 {
-    public class CreateModel : PageModel
+    public class LabCreateModel : PageModel
     {
-        private readonly SuperCoolBooksContext _context;
+        private readonly SuperCoolBooks.Data.SuperCoolBooksContext _context;
 
-        public CreateModel(SuperCoolBooksContext context)
+        public LabCreateModel(SuperCoolBooks.Data.SuperCoolBooksContext context)
         {
             _context = context;
         }
 
+        [BindProperty]
+        public Models.Book Book { get; set; } = default!;
+
+        [BindProperty]
+        public List<SelectListItem> Authors { get; set; }
+
+        [BindProperty]
+        public List<int> GenreId { get; set; }
+        [BindProperty]
+        public int AuthorId { get; set; }
+
+        [BindProperty]
+        public List<SelectListItem> Genres { get; set; }
+
+
         public async Task<IActionResult> OnGet()
         {
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "AuthorId", "AuthorId");
-            ViewData["GenerId"] = new SelectList(_context.Genres, "GenreId", "GenreId");
+        ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+        
+            Authors = await _context.Authors.Select(a => new SelectListItem
+            {
+                Value = a.AuthorId.ToString(),
+                Text = $"{a.FirstName} {a.LastName}"
+            }).ToListAsync();
+
+            Genres = await _context.Genres.Select(g => new SelectListItem
+            {
+                Value = g.GenreId.ToString(),
+                Text = $"{g.Title}"
+            }).ToListAsync();
+
 
             return Page();
+
         }
-        [BindProperty]
-        public Models.Book Book { get; set; }
-        [BindProperty]
-        public List <Models.Genre> Genre { get; set; }
-        [BindProperty]
-        public List <Models.Author> Author { get; set; }
-       
-        public async Task<IActionResult> OnPostAsync()
+
+        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        public async Task<IActionResult> OnPostAsync(Models.Book book)
         {
-                //Genre = await _context.Genres.FindAsync(Genre.GenreId);
-                //Author = await _context.Authors.FindAsync(Author.AuthorId);
-                List<Models.Book> Book = await _context.Books.Include(b => b.AuthorBooks)
-                .Include(c => c.BookGenres)
-                .ToListAsync();
-                //.FirstOrDefaultAsync();
-                //.FirstOrDefaultAsync();
+            var test = Request.Form["testAId"];
 
-                //Book.Author = new Models.Author();
-
-                if (!ModelState.IsValid)
+          if (!ModelState.IsValid || _context.Books == null || Book == null)
             {
+                ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
                 return Page();
             }
+                   
 
-            _context.Attach(Book).State = EntityState.Added;
-            //_context.Books.Add(Book);
+            _context.Books.Add(Book);
+
             await _context.SaveChangesAsync();
-            /*
-            foreach (var genre in Book.Genres)
+
+            //Add connection between book and authors in the JoinTable AuthorBook
+            AuthorBook authorBook = new AuthorBook() {AuthorId = AuthorId, BooksBookId = Book.BookId};
+            _context.AuthorBooks.Add(authorBook);
+
+            List<BookGenre> glist = new List<BookGenre>();
+            foreach (var id in GenreId)
             {
-                if (_context.Entry(Book).Collection(b => b.Genres).Query().FirstOrDefault(g => g.GenreId == genre.GenreId) == null)
-                {
-                    _context.Add(genre);
-                }
+                glist.Add(new BookGenre { BooksBookId = Book.BookId, GenresGenreId = id });
             }
-            */
+            
+            _context.BookGenres.AddRange(glist);
             await _context.SaveChangesAsync();
+
 
             return RedirectToPage("./Index");
         }

@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @inject SuperCoolBooks.Data.SuperCoolBooksContext _context
 
@@ -34,11 +34,14 @@
         }
         </p>
       </div> 
+
+=======
     </div>
-  </div>
+}
 
 
 
+@if (Model.Book != null){
 @*Container for the other books. A responsive grid.*@
   <div class="container">
     <div class="row">
@@ -59,6 +62,3 @@
         }
     </div>
   </div>
-
-
-
