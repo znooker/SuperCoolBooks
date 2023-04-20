@@ -73,7 +73,7 @@
     <a asp-page="./Index">Back to List</a>
 </div>
 
-@*Code for Leaving a review along with javascript for the character counter, for the moment the userId is hardcoded to be = 1*@
+@*Form for leaving a review, for the moment the userId is hardcoded to be = 1*@
 
 <div class="row">
     <div class="col-md-4" style="width:40rem">
@@ -83,7 +83,8 @@
             <input type="hidden" asp-for="Review.BookId" />
             <div class="form-group">
                 <label asp-for="Review.Title" class="control-label"></label>
-                <input asp-for="Review.Title" class="form-control" placeholder="Title..." maxlength="255"/>
+                <input asp-for="Review.Title" class="form-control" placeholder="Title..." maxlength="100" id="reviewTitleArea"/>
+                <div id="charCountTitle"></div>
                 <span asp-validation-for="Review.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -131,8 +132,26 @@
 
       </div>
 
-
+      @*This is the script for the "x characters remaning"*@
   <script>
+
+      //this is for reviewTitle
+     const titleInput = document.getElementById("reviewTitleArea");
+     const titleCharCount = document.getElementById("charCountTitle");
+     const maxTitleChars = 100;
+
+     // Display initial "characters remaining" indicator
+     const remainingTitleChars = maxTitleChars - titleInput.value.length;
+     titleCharCount.textContent = `${remainingTitleChars} characters remaining`;
+     
+     // Attach event listener to update indicator on input
+     titleInput.addEventListener("input", function() {
+       const remainingTitleChars = maxTitleChars - titleInput.value.length;
+       titleCharCount.textContent = `${remainingTitleChars} characters remaining`;
+     });
+
+
+      //this is for reviewTextArea
       const textarea = document.getElementById("reviewTextArea");
       const charCount = document.getElementById("charCount");
       const maxChars = 1000;
