@@ -56,7 +56,7 @@ namespace SuperCoolBooks.Pages.Books
                 ViewData["Book"] = book;
 
                 //Reviews = reviews.ToList();
-                Reviews = reviews.Where(r => r.BookId == Book.BookId).ToList();
+                Reviews = reviews.Where(r => r.BookId == Book.BookId && r.IsDeleted != true).ToList();
             }
             
             
@@ -76,6 +76,19 @@ namespace SuperCoolBooks.Pages.Books
 
             //Redirect to the same page, Return Page(); would not have any data remaining after submitting review
             return RedirectToPage("/Books/Details", new { id =Review.BookId });
+        }
+
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var review = await _context.Reviews.FindAsync(id);
+
+            if (review != null)
+            {
+                review.IsDeleted = true;
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToPage("/Books/Details", new { id = review.BookId });
         }
     }
 }
