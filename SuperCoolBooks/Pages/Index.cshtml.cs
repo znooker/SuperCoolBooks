@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SuperCoolBooks.Data;
 using SuperCoolBooks.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SuperCoolBooks.Pages
 {
@@ -25,39 +24,28 @@ namespace SuperCoolBooks.Pages
             _context = context;
         }
 
-        public IList<Models.Book> Books { get; set; } = default!;
-        public Book RandomBook { get; set; }
+        public IList<Models.Book> Book { get; set; } = default!;
+        public Book BookR { get; set; }
 
         public async Task OnGetAsync()
         {
             if (_context.Books != null)
             {
-
-                Books = await _context.Books
-                  .Include(e => e.AuthorBooks)
-                    .ThenInclude(e => e.Author)
-                .ToListAsync();
-
+                Book = await _context.Books
+                .Include(b => b.User).ToListAsync();
                 var random = new Random();
-                var count = _context.Books.Count(); //count the number of books i the database
-                var index = random.Next(count); //generate a random number in the intervall of number of books 
-                RandomBook = _context.Books
-                .Include(e => e.AuthorBooks)
-                        .ThenInclude(e => e.Author)
-                    .Skip(index)
-                    .FirstOrDefault();
-
+                var count = _context.Books.Count();
+                var index = random.Next(count);
+                BookR = _context.Books.Skip(index).FirstOrDefault();
             }
 
         }
 
-        
+   
     }
 
+
+
+
 }
-
-
-
-
-
 
