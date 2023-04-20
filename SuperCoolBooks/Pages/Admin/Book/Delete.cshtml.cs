@@ -53,7 +53,8 @@ namespace SuperCoolBooks.Pages.Admin.Book
             if (book != null)
             {
                 Book = book;
-                _context.Books.Remove(Book);
+                Book.isDeleted = true;
+                //_context.Books.Add(Book);
                 await _context.SaveChangesAsync();
             }
 
