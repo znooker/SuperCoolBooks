@@ -25,6 +25,8 @@ namespace SuperCoolBooks.Pages.Books
         [BindProperty]
         public Review Review { get; set; }
         public int BookId { get; set; }
+
+        public List<Review> Reviews { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.Books == null)
@@ -32,7 +34,17 @@ namespace SuperCoolBooks.Pages.Books
                 return NotFound();
             }
 
-            var book = await _context.Books.FirstOrDefaultAsync(m => m.BookId == id);
+            //var book = await _context.Books.FirstOrDefaultAsync(m => m.BookId == id);
+
+            var book = await _context.Books
+                .Include(b => b.Reviews)
+                .FirstOrDefaultAsync(m => m.BookId == id);
+
+            //var reviews = await _context.Reviews.Where(r => r.BookId == id);
+
+            //var reviews = await _context.Reviews;
+            var reviews = _context.Reviews.Where(r => r.BookId == id);
+
             if (book == null)
             {
                 return NotFound();
@@ -42,14 +54,18 @@ namespace SuperCoolBooks.Pages.Books
                 Book = book;
                 Review = new Review { BookId = book.BookId };
                 ViewData["Book"] = book;
+
+                //Reviews = reviews.ToList();
+                Reviews = reviews.Where(r => r.BookId == Book.BookId).ToList();
             }
+            
             
             
             return Page();
         }
 
-        //Code to be added under here
-        public async Task<IActionResult> OnPostAsync()
+        //Posting a Review
+        public async Task<IActionResult> OnPostAsyncReview()
         {
             if (!ModelState.IsValid)
             {
@@ -58,6 +74,7 @@ namespace SuperCoolBooks.Pages.Books
             _context.Reviews.Add(Review);
             await _context.SaveChangesAsync();
 
+            //Redirect to the same page, Return Page(); would not have any data remaining after submitting review
             return RedirectToPage("/Books/Details", new { id =Review.BookId });
         }
     }

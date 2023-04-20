@@ -1,0 +1,13 @@
+﻿@using SuperCoolBooks.Models;
+@model IEnumerable<Review>
+
+    <ul>
+    @foreach (var review in Model)
+    {
+        <li>
+            <h3>@review.Title</h3>
+            <p>@review.Rating</p>
+            <p>@review.ReviewText</p>
+        </li>
+    }
+</ul>
