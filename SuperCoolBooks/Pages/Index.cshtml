@@ -8,7 +8,7 @@
 
 
 
-@if(Model.BookR != null)
+@if(Model.RandomBook != null)
 {
     @*Container for the top selected / random book. A larger field and more information.*@
     <div class="container">
@@ -16,7 +16,7 @@
 
             <div class="col-md-4">
 
-                <img src="@Model.BookR.ImagePath" style="height:300px;width:300px" />
+                <img src="@Model.RandomBook.ImagePath" style="height:300px;width:300px" />
             </div>
             <div class="col-md-8">
 
@@ -24,9 +24,9 @@
 
                     <h1>Slumpad bok från tabellen Books</h1>
 
-                    @if (Model.BookR != null)
+                    @if (Model.RandomBook != null)
                     {
-                    <p>Titel: @Model.BookR.Title</p>
+                    <p>Titel: @Model.RandomBook.Title</p>
                     <p>Författare:</p>
                     }
                     else
@@ -41,11 +41,11 @@
 
 
 
-@if (Model.Book != null){
+@if (Model.Books != null){
 @*Container for the other books. A responsive grid.*@
   <div class="container">
     <div class="row">
-        @foreach (var item in Model.Book){
+        @foreach (var item in Model.Books){
             <div class="col-md-4" style="background-color: #f2f2f2; padding: 3%;">
            
         <img src="@item.ImagePath" style="height:250px;width:250px" />
