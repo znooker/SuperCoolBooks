@@ -108,16 +108,30 @@ namespace SuperCoolBooks.Pages.Books
                 return NotFound();
             }
 
-            // Create a new ReviewFeedback object and set its properties
-            var reviewFeedback = new ReviewFeedback
-            {
-                ReviewId = id,
-                UserId = "1", // Hardcoded for now
-                IsHelpful = isHelpful
-            };
+            // Get the existing review feedback for this review and user, if it exists
+            var reviewFeedback = await _context.ReviewFeedBacks
+                .SingleOrDefaultAsync(rf => rf.ReviewId == id && rf.UserId == "1"); // Hardcoded for now
 
-            // Add the new review feedback to the context and save changes
-            _context.ReviewFeedBacks.Add(reviewFeedback);
+            if (reviewFeedback == null)
+            {
+                // If no review feedback exists, create a new one
+                reviewFeedback = new ReviewFeedback
+                {
+                    ReviewId = id,
+                    UserId = "1", // Hardcoded for now
+                    IsHelpful = isHelpful
+                };
+
+                // Add the new review feedback to the context
+                _context.ReviewFeedBacks.Add(reviewFeedback);
+            }
+            else
+            {
+                // If review feedback already exists, update its IsHelpful property
+                reviewFeedback.IsHelpful = isHelpful ?? false; // Default to false if isHelpful is null
+            }
+
+            // Save changes to the database
             await _context.SaveChangesAsync();
 
             return RedirectToPage("/Books/Details", new { id = review.BookId });
