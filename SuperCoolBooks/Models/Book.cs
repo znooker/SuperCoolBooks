@@ -4,7 +4,7 @@
     {
         public int BookId { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public string Title { get; set; }
 
@@ -12,7 +12,7 @@
 
         public string ISBN { get; set; }
 
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
 
         public bool? isDeleted { get; set; }
 
