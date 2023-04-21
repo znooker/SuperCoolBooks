@@ -16,7 +16,7 @@
     <script>
         function redirectToDetailsPage() {
             var bookId = '@Model.RandomBook.BookId';
-                window.location.href = './Admin/Book/Details?id=' + bookId;
+                window.location.href = './Books/Details?id=' + bookId;
         }
     </script>
 
@@ -75,7 +75,7 @@
        <script>
            function redirectToDetailsPage2(element) {
            var bookId = element.getAttribute("data-bookid");
-           window.location.href = './Admin/Book/Details?id=' + bookId;
+           window.location.href = './Books/Details?id=' + bookId;
                         }
     </script>
         <img src="@item.ImagePath" style="height:250px;width:250px" />
