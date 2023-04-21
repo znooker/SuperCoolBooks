@@ -96,26 +96,6 @@ namespace SuperCoolBooks.Pages.Admin.Genre
                 _context.Genres.Remove(Genre);
                 await _context.SaveChangesAsync();
 
-                //try
-                //{
-                //    //_context.Genres.Attach(Genre);
-                //    //await _context.SaveChangesAsync();
-
-                //    _context.Genres.Remove(Genre);
-                //    await _context.SaveChangesAsync();
-                //}
-                //catch (Exception e)
-                //{
-                //    this.OnPostAsync(id);
-                //}
-
-                //Genre = genre;
-
-                //_context.Genres.Attach(Genre);
-
-                //this.OnPostAsync(id);
-
-                //await _context.SaveChangesAsync();
             }
 
             return RedirectToPage("./Index");
