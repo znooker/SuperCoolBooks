@@ -48,4 +48,6 @@ public partial class AspNetUser
     public virtual ICollection<Book> Books { get; } = new List<Book>();
 
     public virtual ICollection<Review> Reviews { get; } = new List<Review>();
+    
+    public virtual ICollection<ReviewFeedback> Feedbacks { get; set; }
 }

@@ -26,6 +26,9 @@ namespace SuperCoolBooks.Pages.Books
         public Review Review { get; set; }
         public int BookId { get; set; }
 
+        //[BindProperty] binding the property messes up leaving a review.
+        public ReviewFeedback ReviewFeedback { get; set; }
+
         public List<Review> Reviews { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -90,5 +93,35 @@ namespace SuperCoolBooks.Pages.Books
             }
             return RedirectToPage("/Books/Details", new { id = review.BookId });
         }
+
+        public async Task<IActionResult> OnPostReviewFeedbackAsync(int id, bool? isHelpful)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            // Get the review for which the user is submitting feedback
+            var review = await _context.Reviews.FindAsync(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+
+            // Create a new ReviewFeedback object and set its properties
+            var reviewFeedback = new ReviewFeedback
+            {
+                ReviewId = id,
+                UserId = "1", // Hardcoded for now
+                IsHelpful = isHelpful
+            };
+
+            // Add the new review feedback to the context and save changes
+            _context.ReviewFeedBacks.Add(reviewFeedback);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("/Books/Details", new { id = review.BookId });
+        }
     }
 }
+

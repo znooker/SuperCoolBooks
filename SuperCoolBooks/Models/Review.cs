@@ -24,5 +24,7 @@ namespace SuperCoolBooks.Models
         //Had to make these nullable or the validation check would always put these as invalid
         public virtual Book? Book { get; set; }
         public virtual AspNetUser? User { get; set; }
+
+        public ICollection<ReviewFeedback>? Feedbacks { get; set; }
     }
 }

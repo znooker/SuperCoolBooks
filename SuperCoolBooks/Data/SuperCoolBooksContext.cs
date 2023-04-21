@@ -44,6 +44,7 @@ public partial class SuperCoolBooksContext : DbContext
     public virtual DbSet<Genre> Genres { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
+    public virtual DbSet<ReviewFeedback> ReviewFeedBacks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -174,6 +175,7 @@ public partial class SuperCoolBooksContext : DbContext
                 .HasDefaultValueSql("(CONVERT([bit],(0)))");
 
             entity.HasOne(d => d.User).WithMany(p => p.Books).HasForeignKey(d => d.UserId);
+
         });
 
         modelBuilder.Entity<BookGenre>(entity =>
@@ -229,7 +231,21 @@ public partial class SuperCoolBooksContext : DbContext
                 .HasForeignKey(d => d.BookId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(d => d.User).WithMany(p => p.Reviews).HasForeignKey(d => d.UserId);
+           
+
+            entity.HasMany(r => r.Feedbacks).WithOne(f => f.Review).HasForeignKey(f => f.ReviewId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ReviewFeedback>(entity =>
+        {
+        
+            entity.HasKey(rf => rf.ReviewFeedBackId);
+
+            entity.Property(e => e.IsHelpful).HasDefaultValue(null);
+            
+            entity.HasOne(e => e.User).WithMany(r => r.Feedbacks).HasForeignKey(e => e.UserId);
+
+            entity.HasOne(e => e.Review).WithMany(r => r.Feedbacks).HasForeignKey(e => e.ReviewId);
         });
 
         OnModelCreatingPartial(modelBuilder);
