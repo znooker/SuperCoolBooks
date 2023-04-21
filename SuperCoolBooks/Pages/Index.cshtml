@@ -11,7 +11,15 @@
 @if(Model.RandomBook != null)
 {
     @*Container for the top selected / random book. A larger field and more information.*@
-    <div class="container">
+    <div class="container" onclick="redirectToDetailsPage()">
+        @*JAVASCRIPT - click on the div to get to book-detailspage*@
+    <script>
+        function redirectToDetailsPage() {
+            var bookId = '@Model.RandomBook.BookId';
+                window.location.href = './Admin/Book/Details?id=' + bookId;
+        }
+    </script>
+
         <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
 
             <div class="col-md-4">
@@ -55,16 +63,23 @@
     </div>
 }
 
-
-
 @if (Model.Books != null){
 @*Container for the other books. A responsive grid.*@
   <div class="container">
     <div class="row">
         @foreach (var item in Model.Books){
-            <div class="col-md-4" style="background-color: #f2f2f2; padding: 3%;">
-           
+                <div class="col-md-4" onclick="redirectToDetailsPage2(this)"
+             style="background-color: #f2f2f2; padding: 3%
+                "data-bookid="@item.BookId";>
+        @*JAVASCRIPT - click on the div to get to book-detailspage*@
+       <script>
+           function redirectToDetailsPage2(element) {
+           var bookId = element.getAttribute("data-bookid");
+           window.location.href = './Admin/Book/Details?id=' + bookId;
+                        }
+    </script>
         <img src="@item.ImagePath" style="height:250px;width:250px" />
+    
         <!-- Print TITLE -->  
         <p>Titel: 
                 @Html.DisplayFor(modelItem => item.Title)
