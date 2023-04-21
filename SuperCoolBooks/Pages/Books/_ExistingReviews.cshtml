@@ -10,7 +10,7 @@
          <p style="font-size:1rem">Rating: @review.Rating</p>
          <p style="font-size:0.85rem">@review.ReviewText</p>
 
-          <form method="post" asp-page-handler="reviewfeedback" asp-route--id="@review.ReviewId">
+          <form method="post" asp-page-handler="reviewfeedback" asp-route-id="@review.ReviewId">
             @*<input type="hidden" asp-for="">*@
             @*Hardcoded userid to be 1 change later when we got login to work*@
             <input type="hidden" asp-for="ReviewFeedback.UserId" value="1">
