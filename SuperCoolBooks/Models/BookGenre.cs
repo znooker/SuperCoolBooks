@@ -8,9 +8,9 @@ namespace SuperCoolBooks.Models;
 
 public partial class BookGenre
 {
-    public int BooksBookId { get; set; }
+    public int? BooksBookId { get; set; }
 
-    public int GenresGenreId { get; set; }
+    public int? GenresGenreId { get; set; }
 
     public virtual Book BooksBook { get; set; }
 
