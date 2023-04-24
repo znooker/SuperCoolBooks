@@ -70,8 +70,8 @@ namespace SuperCoolBooks.Pages.Admin.Book
             }
 
 
-            //Set User who Created the book
-            Book.UserId = "1";
+            //NOT FINISHED!!!! - Set User who Created the book, set the logged in user as the creator - NOT FINISHED!!!!
+            Book.UserId = "1"; //Hardcoded value
 
             if (!ModelState.IsValid || _context.Books == null || Book == null)
             {
