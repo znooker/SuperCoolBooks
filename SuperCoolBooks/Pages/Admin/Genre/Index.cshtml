@@ -31,25 +31,37 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Genre) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
+        @foreach (var item in Model.Genre)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
                 <td>@item.BookGenres.Count()</td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.GenreId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.GenreId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.GenreId">Delete</a>
-            </td>
-            
-        </tr>
-}
+
+                @{
+                    if (item.Title.ToLower() == "other")
+                    {
+                        <td> <a asp-page="./Details" asp-route-id="@item.GenreId">Details</a></td>
+                    }
+
+                    else
+                    {
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.GenreId">Edit</a> |
+                            <a asp-page="./Details" asp-route-id="@item.GenreId">Details</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.GenreId">Delete</a>
+                        </td>
+                    }
+                }
+
+            </tr>
+        }
     </tbody>
 </table>
