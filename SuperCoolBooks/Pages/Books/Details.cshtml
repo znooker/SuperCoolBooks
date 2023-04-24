@@ -4,77 +4,60 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
+<link rel="stylesheet" href="~/css/bookrating.css"/>
 
 <div>
-    <h4>Book</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.ISBN)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.ISBN)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.ImagePath)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.ImagePath)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.isDeleted)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.isDeleted)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.Created)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.Created)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.ReleaseDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.ReleaseDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.User.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Book.BookId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Book.BookId)
-        </dd>
-
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Book?.BookId">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>
+<div class="d-flex p-2 gap-5">
+    <div>
+        <img src="~/images/book-images/@Model.Book.ImagePath" style="width:auto;height:300px" />
+            <div style="font-size:1.5rem">
+                <i data-star="@ViewData["AverageRating"]" class="mt-1"></i>
+                <p class="mt-1">Rating: @ViewData["AverageRating"]</p>
+            </div>
+    </div>
+    <div class="d-flex flex-column">
+    <h1>@Model.Book.Title</h1>
+    <div class="card mt-2 p-2">
+        <p>@Model.Book.Description</p>
+        <p>
+            @foreach (var genre in Model.Book.BookGenres)
+            {
+                @genre.GenresGenre.Title 
+                //Will add a comma after each genre apart from the last
+                @if (genre != Model.Book.BookGenres.Last())
+                {
+                   <text>, </text> 
+                    
+                } 
+            }
+
+        </p>
+            <p>
+                @foreach (var author in Model.Book.AuthorBooks)
+                {
+                    @($"{author.Author.FirstName} {author.Author.LastName}")
+
+                    @if (author != Model.Book.AuthorBooks.Last())
+                    {
+                        <text>, </text>
+                    }
+                }
+            </p>
+            <p>@Model.Book.ReleaseDate</p>
 
 
-<partial name="_LeaveReview" />
+    </div>
+
+
+
+</div>
+    
+</div>
+
+
+    <partial name="_LeaveReview" />
 
       <div>
           <h2>Reviews</h2>
@@ -88,4 +71,5 @@
     }
 
       </div>
+
 
