@@ -46,15 +46,26 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.ImagePath)*@
-                <img src="~/images/author-images/@item.ImagePath" style="height:50px;width:50px" alt="@item.FirstName @item.LastName"/>
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.AuthorId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.AuthorId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AuthorId">Delete</a>
-            </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ImagePath)*@
+                    <img src="~/images/author-images/@item.ImagePath" style="height:50px;width:auto" alt="@item.FirstName @item.LastName" />
+                </td>
+                @{
+                    if (item.FirstName.ToLower() == "unknown" && item.LastName.ToLower() == "unknown")
+                    {
+                        <td> <a asp-page="./Details" asp-route-id="@item.AuthorId">Details</a></td>
+                    }
+
+                    else
+                    {
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.AuthorId">Edit</a> |
+                            <a asp-page="./Details" asp-route-id="@item.AuthorId">Details</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.AuthorId">Delete</a>
+                        </td>
+                    }
+                }
+
         </tr>
 }
     </tbody>
