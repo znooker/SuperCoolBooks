@@ -20,6 +20,11 @@ namespace SuperCoolBooks.Models
 
         public string ReviewText { get; set; }
 
+        //to keep track of total likes for the review
+        public int Likes { get; set; } = 0;
+        public int Upvotes { get; set; } = 0;
+        public int Downvotes { get; set; } = 0;
+
 
         //Had to make these nullable or the validation check would always put these as invalid
         public virtual Book? Book { get; set; }

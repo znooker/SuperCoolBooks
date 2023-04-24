@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperCoolBooks.Data;
 
@@ -11,9 +12,11 @@ using SuperCoolBooks.Data;
 namespace SuperCoolBooks.Data.Migrations
 {
     [DbContext(typeof(SuperCoolBooksContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230424095129_AddedLikeCounterReview")]
+    partial class AddedLikeCounterReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,16 +384,13 @@ namespace SuperCoolBooks.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<int>("Downvotes")
-                        .HasColumnType("int");
-
                     b.Property<bool?>("IsDeleted")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValueSql("(CONVERT([bit],(0)))");
 
-                    b.Property<int>("Likes")
+                    b.Property<int?>("Likes")
                         .HasColumnType("int");
 
                     b.Property<int>("Rating")
@@ -407,9 +407,6 @@ namespace SuperCoolBooks.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("Upvotes")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
