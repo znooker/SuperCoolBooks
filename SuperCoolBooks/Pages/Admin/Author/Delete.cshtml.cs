@@ -48,7 +48,31 @@ namespace SuperCoolBooks.Pages.Admin.Author
             {
                 return NotFound();
             }
-            var author = await _context.Authors.FindAsync(id);
+
+            //Get a list of all the books that the author has written
+            var books = await _context.Books.Where(b => b.AuthorBooks.Any(ab => ab.AuthorId == id)).Include(b => b.AuthorBooks).ThenInclude(ab => ab.Author).ToListAsync();
+
+            //Get the first author out of the author table (Unknown, Unknown)
+            var firstAuthor = await _context.Authors.FirstOrDefaultAsync();
+
+
+            //Update the found books author to the "Unknown" value in the database, "Unknown" author is the first (authorid = 1) in the database.
+            foreach (var item in books)
+            {
+                //Remove old author connection
+                var olddata = _context.AuthorBooks.First(x => x.BooksBookId == item.BookId && x.AuthorId == id);
+                _context.AuthorBooks.Remove(olddata);
+                _context.SaveChanges();
+
+                //Add new author connection
+                AuthorBook newdata = new AuthorBook { BooksBookId = item.BookId, AuthorId = firstAuthor.AuthorId };
+                _context.AuthorBooks.Add(newdata);
+                _context.SaveChanges();
+
+            }
+
+            //Find the author by id
+            var author = await _context.Authors.SingleAsync(x => x.AuthorId == id);
 
             if (author != null)
             {
