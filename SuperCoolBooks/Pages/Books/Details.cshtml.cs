@@ -30,6 +30,7 @@ namespace SuperCoolBooks.Pages.Books
         public ReviewFeedback ReviewFeedback { get; set; }
 
         public List<Review> Reviews { get; set; }
+        public List <ReviewFeedback> ReviewFeedbacks { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.Books == null)
@@ -94,7 +95,7 @@ namespace SuperCoolBooks.Pages.Books
             return RedirectToPage("/Books/Details", new { id = review.BookId });
         }
 
-        public async Task<IActionResult> OnPostReviewFeedbackAsync(int id, bool? isHelpful)
+        public async Task<IActionResult> OnPostReviewFeedbackAsync(int id, bool? isHelpful, bool? hasFlagged)
         {
             if (id == 0)
             {
@@ -119,17 +120,45 @@ namespace SuperCoolBooks.Pages.Books
                 {
                     ReviewId = id,
                     UserId = "1", // Hardcoded for now
-                    IsHelpful = isHelpful
+                    IsHelpful = isHelpful,
+                    HasFlagged = hasFlagged
                 };
 
                 // Add the new review feedback to the context
                 _context.ReviewFeedBacks.Add(reviewFeedback);
+
+                // Update the Upvotes and Downvotes properties
+                if (isHelpful == true)
+                {
+                    review.Upvotes++;
+                }
+                else
+                {
+                    review.Downvotes++;
+                }
             }
             else
             {
                 // If review feedback already exists, update its IsHelpful property
-                reviewFeedback.IsHelpful = isHelpful ?? false; // Default to false if isHelpful is null
+                bool isHelpfulBefore = reviewFeedback.IsHelpful ?? false;
+                reviewFeedback.IsHelpful = isHelpful;
+                reviewFeedback.HasFlagged = hasFlagged ?? false; //default to null
+
+                // Update the Upvotes and Downvotes properties
+                if (isHelpful == true && isHelpfulBefore == false)
+                {
+                    review.Upvotes++;
+                    review.Downvotes--;
+                }
+                else if (isHelpful == false && isHelpfulBefore == true)
+                {
+                    review.Downvotes++;
+                    review.Upvotes--;
+                }
             }
+
+            // Calculate the total number of likes
+            review.Likes = review.Upvotes - review.Downvotes;
 
             // Save changes to the database
             await _context.SaveChangesAsync();

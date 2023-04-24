@@ -14,13 +14,15 @@
             @*<input type="hidden" asp-for="">*@
             @*Hardcoded userid to be 1 change later when we got login to work*@
             <input type="hidden" asp-for="ReviewFeedback.UserId" value="1">
-            <button type="submit" class="btn btn-success" name="isHelpful" value="true"><i class="bi bi-hand-thumbs-up"></i></button>
-            <button type="submit" class="btn btn-danger" name="isHelpful" value="false"><i class="bi bi-hand-thumbs-down"></i></button>
+            <button type="submit" title="I like this" class="btn btn-success" name="isHelpful" value="true"><i class="bi bi-hand-thumbs-up"></i></button>
+            <button type="submit" title="I dislike this" class="btn btn-danger" name="isHelpful" value="false"><i class="bi bi-hand-thumbs-down"></i></button>
+            <button type="submit" title="Flag review" class="btn btn-danger" name="hasFlagged" value="true"><i class="bi bi-flag"></i></button>
          </form>
 
          <form method="post" asp-page-handler="deletereview" asp-route-id="@review.ReviewId">
-             <button type="submit" class="btn btn-danger mt-2">Delete</button>
+             <button type="submit" title="Delete review" class="btn btn-danger mt-2">Delete</button>
          </form>
+           
 
         
          </div>

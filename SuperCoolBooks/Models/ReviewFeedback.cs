@@ -6,6 +6,7 @@ namespace SuperCoolBooks.Models
     {
         public int ReviewFeedBackId { get; set; }
         public bool? IsHelpful { get; set; }
+        public bool? HasFlagged { get; set; }
 
         //Foreign keys
         public string UserId { get; set; }
