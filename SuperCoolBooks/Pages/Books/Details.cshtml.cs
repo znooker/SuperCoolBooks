@@ -42,13 +42,28 @@ namespace SuperCoolBooks.Pages.Books
 
             var book = await _context.Books
                 .Include(b => b.Reviews)
+                .Include(b => b.AuthorBooks)
+                .ThenInclude(b=>b.Author)
+                .Include(b => b.BookGenres)
+                .ThenInclude(b=>b.GenresGenre)
+
                 .FirstOrDefaultAsync(m => m.BookId == id);
 
             //var reviews = await _context.Reviews.Where(r => r.BookId == id);
 
             //var reviews = await _context.Reviews;
-            var reviews = _context.Reviews.Where(r => r.BookId == id);
-
+            var reviews = _context.Reviews.Where(r => r.BookId == id && r.IsDeleted !=true);
+            if (reviews.Any())
+            {
+                var averageRating = reviews.Average(r => r.Rating);
+                //This will only take the rating to the nearest decimal
+                var formattedRating = averageRating.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                ViewData["AverageRating"] = formattedRating;
+            }
+            else
+            {
+                ViewData["AverageRating"] = "No rating yet";
+            }
             if (book == null)
             {
                 return NotFound();
@@ -58,9 +73,7 @@ namespace SuperCoolBooks.Pages.Books
                 Book = book;
                 Review = new Review { BookId = book.BookId };
                 ViewData["Book"] = book;
-
-                //Reviews = reviews.ToList();
-                Reviews = reviews.Where(r => r.BookId == Book.BookId && r.IsDeleted != true).ToList();
+                Reviews = reviews.ToList();
             }
             
             
