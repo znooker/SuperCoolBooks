@@ -20,6 +20,7 @@ namespace SuperCoolBooks.Pages.Admin.Book
         }
 
       public Models.Book Book { get; set; } = default!; 
+      public List<Models.Author> Authors { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -27,14 +28,23 @@ namespace SuperCoolBooks.Pages.Admin.Book
             {
                 return NotFound();
             }
-
+            //All Genres connected to the book.
             var book = await _context.Books.Include(bg => bg.BookGenres).ThenInclude(g => g.GenresGenre).FirstOrDefaultAsync(m => m.BookId == id);
+            
+            //All authors connected to the book
+            var authors = _context.Authors.
+               Include(author => author.AuthorBooks).
+               ThenInclude(ab => ab.BooksBook).
+               Where(author => author.AuthorBooks.
+               Any(ab => ab.BooksBookId == id)).ToList();
+
             if (book == null)
             {
                 return NotFound();
             }
             else 
             {
+                Authors = authors;
                 Book = book;
             }
             return Page();

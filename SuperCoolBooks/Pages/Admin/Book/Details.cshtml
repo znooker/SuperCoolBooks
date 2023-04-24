@@ -46,6 +46,18 @@
                 </div>
                 
             </div>
+
+        <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Authors)
+        </dt>
+        <ul class="list-group-flush">
+                @foreach (var item in Model.Authors)
+                {
+                <li class="list-group-item">@item.FirstName @item.LastName</li>
+
+                }
+        </ul>
+         
             
         </dd>
 
