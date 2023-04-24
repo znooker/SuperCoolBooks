@@ -6,14 +6,18 @@
     ViewData["Title"] = "Home page";
 }
 
-
+ @*Container for the top selected / random book. A larger field and more information.*@
 <form method="get">
   <div class="input-group mb-3">
-  <input type="text" class="form-control" placeholder="Search..."  aria-describedby="button-addon2">
-  <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+  <input type="text" class="form-control" asp-for="SearchString" placeholder="Search..."  aria-describedby="button-addon2">
+  <button class="btn btn-outline-secondary" type="submit">Search</button>
 </div>
 </form>
 
+@if (Model.Books.Count == 0)
+{
+    <p>No search result</p>
+}
 
 @if(Model.RandomBook != null)
 {
@@ -22,7 +26,7 @@
         @*JAVASCRIPT - click on the div to get to book-detailspage*@
     <script>
         function redirectToDetailsPage() {
-            var bookId = '@Model.RandomBook.BookId';
+            var bookId = '§@Model.RandomBook.BookId';
                 window.location.href = './Books/Details?id=' + bookId;
         }
     </script>
@@ -61,16 +65,16 @@
                          }
                     </p>
                     }
-                    else
-                    {
-                    <p>No results found.</p>
-                    }
+                 
+                 
             </div>
         </div>
     </div>
 }
 
-@if (Model.Books != null){
+
+@if (Model.Books != null)
+{
 @*Container for the other books. A responsive grid.*@
   <div class="container">
     <div class="row">
@@ -106,4 +110,7 @@
         }
     </div>
   </div>
+     
 }
+
+
