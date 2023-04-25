@@ -26,7 +26,6 @@ namespace SuperCoolBooks.Pages.Books
         public Review Review { get; set; }
         public int BookId { get; set; }
 
-        //[BindProperty] binding the property messes up leaving a review.
         public ReviewFeedback ReviewFeedback { get; set; }
 
         public List<Review> Reviews { get; set; }
@@ -38,21 +37,15 @@ namespace SuperCoolBooks.Pages.Books
                 return NotFound();
             }
 
-            //var book = await _context.Books.FirstOrDefaultAsync(m => m.BookId == id);
-
             var book = await _context.Books
                 .Include(b => b.Reviews)
                 .Include(b => b.AuthorBooks)
                 .ThenInclude(b=>b.Author)
                 .Include(b => b.BookGenres)
                 .ThenInclude(b=>b.GenresGenre)
-
                 .FirstOrDefaultAsync(m => m.BookId == id);
 
-            //var reviews = await _context.Reviews.Where(r => r.BookId == id);
-
-            //var reviews = await _context.Reviews;
-            var reviews = _context.Reviews.Where(r => r.BookId == id && r.IsDeleted !=true);
+            var reviews = _context.Reviews.Include(r=> r.User).Where(r => r.BookId == id && r.IsDeleted !=true);
             if (reviews.Any())
             {
                 var averageRating = reviews.Average(r => r.Rating);
@@ -175,7 +168,7 @@ namespace SuperCoolBooks.Pages.Books
 
             // Save changes to the database
             await _context.SaveChangesAsync();
-
+            //Redirect to the same page
             return RedirectToPage("/Books/Details", new { id = review.BookId });
         }
     }
