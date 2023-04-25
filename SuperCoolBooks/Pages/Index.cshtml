@@ -6,7 +6,6 @@
     ViewData["Title"] = "Home page";
 }
 
- @*Container for the top selected / random book. A larger field and more information.*@
 <form method="get">
   <div class="input-group mb-3">
   <input type="text" class="form-control" asp-for="SearchString" placeholder="Search..."  aria-describedby="button-addon2">
@@ -19,6 +18,7 @@
     <p>No search result</p>
 }
 
+ @*Container for the top selected / random book. A larger field and more information.*@
 @if(Model.RandomBook != null)
 {
     @*Container for the top selected / random book. A larger field and more information.*@
@@ -31,13 +31,17 @@
         }
     </script>
 
-        <div class="row" style="background-color: #f2f2f2; justify-content: center; padding: 3%;">
+        <div class="row" style=" justify-content: center; padding: 5em;">
 
+            <div class="col-md-1">
+
+                
+            </div>
             <div class="col-md-4">
 
-                <img src="~/images/book-images/@Model.RandomBook.ImagePath" style="height:300px;width:300px" />
+                <img src="~/images/book-images/@Model.RandomBook.ImagePath" style="height:55vh;" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
               
                     @if (Model.RandomBook != null)
                     {
@@ -64,24 +68,26 @@
                                 @item.GenresGenre.Title
                          }
                     </p>
+                    <!-- Print DESCRIPTION -->
+                    <p>
+                        Description: @Model.RandomBook.Description
+                       
+                        
+                    </p>
                     }
                  
                  
             </div>
         </div>
     </div>
+
+
+
+
 }
 
 
-@if (Model.Books != null)
-{
-@*Container for the other books. A responsive grid.*@
-  <div class="container">
-    <div class="row">
-        @foreach (var item in Model.Books){
-                <div class="col-md-4" onclick="redirectToDetailsPage2(this)"
-             style="background-color: #f2f2f2; padding: 3%
-                "data-bookid="@item.BookId";>
+
         @*JAVASCRIPT - click on the div to get to book-detailspage*@
        <script>
            function redirectToDetailsPage2(element) {
@@ -89,27 +95,34 @@
            window.location.href = './Books/Details?id=' + bookId;
                         }
     </script>
-                    <img src="~/images/book-images/@item.ImagePath" style="height:80%; style="height:250px;width:250px" />
-    
-        <!-- Print TITLE -->  
-        <p>Titel: 
-                @Html.DisplayFor(modelItem => item.Title)
-        </p>
-        <!-- Print AUTHOR -->  
-        <p>Author:
-              @foreach (var item2 in item.AuthorBooks)
-              {
-                   @item2.Author.FirstName
-              }
-           &#32; <!-- &#32 = This is a whitespace -->
-             @foreach (var item2 in item.AuthorBooks)
-             {
-                   @item2.Author.LastName
-             }      
-      </div>
-        }
+
+
+@if (Model.Books != null)
+{
+@*Container for the other books. A responsive grid.*@
+    <div class="row row-cols-1 row-cols-md-5" >
+    @foreach (var item in Model.Books){
+    <div class="col">
+                <div class="card h-100" data-bookid="@item.BookId" onclick="redirectToDetailsPage2(this)" ;>
+            <img src="~/images/book-images/@item.ImagePath" class="card-img-top" />
+            <div class="card-body">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+                    <p class="card-text">
+                        @foreach (var item2 in item.AuthorBooks)
+                        {
+                            @item2.Author.FirstName
+                        }
+                        &#32; <!-- &#32 = This is a whitespace -->
+                        @foreach (var item2 in item.AuthorBooks)
+                        {
+                            @item2.Author.LastName
+                        }
+                    </p>
+            </div>
+        </div>
     </div>
-  </div>
+    } 
+</div>
      
 }
 
