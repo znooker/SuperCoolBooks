@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SuperCoolBooks.Data;
 
-public partial class SuperCoolBooksContext : DbContext
+public partial class SuperCoolBooksContext : IdentityDbContext<SuperCoolBooksUser>
 {
     public SuperCoolBooksContext(DbContextOptions<SuperCoolBooksContext> options)
         : base(options)
@@ -48,6 +48,9 @@ public partial class SuperCoolBooksContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        
+
         modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
@@ -249,6 +252,7 @@ public partial class SuperCoolBooksContext : DbContext
         });
 
         OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

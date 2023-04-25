@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SuperCoolBooks.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using SuperCoolBooks.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +12,15 @@ builder.Services.AddDbContext<SuperCoolBooksContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<SuperCoolBooksContext>();
+builder.Services.AddDefaultIdentity<SuperCoolBooksUser>().AddEntityFrameworkStores<SuperCoolBooksContext>();
 builder.Services.AddRazorPages();
+
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+//{
+//    options.LoginPath = "/login";
+//});
+
+
 
 var app = builder.Build();
 
@@ -33,6 +41,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
