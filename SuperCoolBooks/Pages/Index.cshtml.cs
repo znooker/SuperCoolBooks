@@ -37,29 +37,44 @@ namespace SuperCoolBooks.Pages
                 if (_context.Books != null)
                 {
                     Books = await _context.Books
+                         .Where(e => e.isDeleted == false)
                     .Include(e => e.AuthorBooks)
                     .ThenInclude(e => e.Author)
                     .ToListAsync();
 
+                    var bookIds = await _context.Books
+                    .Where(e => e.isDeleted == false)
+                    .Select(e => e.BookId)
+                    .ToListAsync();
+
                     var random = new Random();
-                    var count = _context.Books.Count();
-                    if (count >= 1)
-                    {
-                        var index = random.Next(count);
+                    var bookIdsList = await _context.Books
+                                        .Where(e => e.isDeleted == false)
+                                        .Select(e => e.BookId)
+                                        .ToListAsync();
+
+                    var randomIndex = random.Next(bookIds.Count);
+                    var randomBookId = bookIds[randomIndex];
+
+           
+              
+                    
+                  
                         RandomBook = _context.Books
+                             .Where(e => e.BookId == randomBookId)
                             .Include(e => e.AuthorBooks)
                             .ThenInclude(e => e.Author)
                              .Include(e => e.BookGenres)
                             .ThenInclude(e => e.GenresGenre)
-                            .Skip(index)
                             .FirstOrDefault();
 
-                    }
+                   
                 }
             }
             else 
             {
                 Books = await _context.Books
+                     .Where(e => e.isDeleted == false)
                    .Where(e => e.Title.Contains(SearchString) ||
                             e.AuthorBooks.Any(e => e.Author.FirstName.Contains(SearchString)
                             || e.Author.LastName.Contains(SearchString))
