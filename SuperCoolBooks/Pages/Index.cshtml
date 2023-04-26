@@ -26,7 +26,7 @@
         @*JAVASCRIPT - click on the div to get to book-detailspage*@
     <script>
         function redirectToDetailsPage() {
-            var bookId = '§@Model.RandomBook.BookId';
+            var bookId = '@Model.RandomBook.BookId';
                 window.location.href = './Books/Details?id=' + bookId;
         }
     </script>

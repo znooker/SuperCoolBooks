@@ -178,6 +178,11 @@ namespace SuperCoolBooks.Pages.Books
 
             return RedirectToPage("/Books/Details", new { id = review.BookId });
         }
+        public async Task<IActionResult> OnPostEditReviewAsync(int id)
+        {
+            Review.ReviewId = id;
+            return RedirectToPage("/Books/EditReview", new { id =Review.ReviewId });
+        }
     }
 }
 
